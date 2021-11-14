@@ -7,24 +7,12 @@ var pool = mysql.createPool({
     password: 'aliuyanfeng0125',
     database: 'vue3-blog'
 });
-pool.getConnection(function(err, connection) {
-    if(err){
-        console.log("建立连接失败");
-    } else {
-        console.log("建立连接成功");
-        console.log(pool._allConnections.length); //  1
-        // connection.query('select * from user', function(err, rows) {
-        //     if(err) {
-        //         console.log("查询失败");
-        //     } else {
-        //         console.log(rows);
-        //     }
-        //     // connection.destory();
-        //     console.log(pool._allConnections.length);  // 0
-        // })
-    }
-    pool.end();
-})
+pool.on('acquire', function (connection) {
+    console.log('Connection %d acquired', connection.threadId);
+});
+pool.on('connection', function (connection) {
+    connection.query('SET SESSION auto_increment_increment=1')
+});
 
 function query(sql,callback){
     pool.getConnection(function(err,connection){

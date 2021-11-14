@@ -27,4 +27,18 @@ router.get('/test', function(req, res, next) {
   })  
 });
 
+router.get('/getArticleList', (req, res, next) => {
+  let getArticleListSql = `select * from blog_article_list`
+  db.query(getArticleListSql, (err,result) => {
+    if (err) {
+      return next(err)
+    }
+    console.error(result)
+    res.send({
+      code: 200,
+      data:result
+    })
+  })
+})
+
 module.exports = router;
