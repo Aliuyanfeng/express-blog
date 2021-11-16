@@ -1,3 +1,4 @@
+const { Router } = require('express');
 var express = require('express');
 var router = express.Router();
 var db = require('../config/db')
@@ -40,5 +41,20 @@ router.get('/getArticleList', (req, res, next) => {
     })
   })
 })
+
+router.get('/getBaseInfo', (req, res, next) => {
+  let baseInfoSql = `select * from blog_baseInfo`
+  db.query(baseInfoSql, (err, result) => {
+    if (err) {
+      return next(err)
+    }
+    console.error(result)
+    res.send({
+      code: 200,
+      data:result
+    })
+  })
+})
+
 
 module.exports = router;
