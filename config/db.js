@@ -19,7 +19,7 @@ function query(sql,callback){
     pool.getConnection(function(err,connection){
         connection.query(sql, function (err, rows) {
             if (err) {
-                return console.log("SQL错误");
+                return console.log("SQL错误",err,sql);
             }
             callback(err,rows)
             connection.release()
