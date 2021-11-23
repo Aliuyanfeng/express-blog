@@ -57,7 +57,7 @@ router.get('/getArticleList', async (req, res, next) => {
 })
 
 router.get('/getBaseInfo', (req, res, next) => {
-  let baseInfoSql = `select * from blog_baseInfo`
+  let baseInfoSql = `select * from blog_baseInfo where id = 1025`
   db.query(baseInfoSql, (err, result) => {
     if (err) {
       return next(err)
@@ -65,7 +65,7 @@ router.get('/getBaseInfo', (req, res, next) => {
     console.error(result)
     res.send({
       code: 200,
-      data:result
+      data:result[0]
     })
   })
 })
