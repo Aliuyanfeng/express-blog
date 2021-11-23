@@ -5,7 +5,8 @@ var pool = mysql.createPool({
     port: 3306,
     user: 'root',
     password: 'aliuyanfeng0125',
-    database: 'vue3-blog'
+    database: 'vue3-blog',
+    timezone:"08:00"
 });
 pool.on('acquire', function (connection) {
     console.log('Connection %d acquired', connection.threadId);
@@ -18,7 +19,7 @@ function query(sql,callback){
     pool.getConnection(function(err,connection){
         connection.query(sql, function (err, rows) {
             if (err) {
-                return console.log("SQL错误");
+                return console.log("SQL错误",err,sql);
             }
             callback(err,rows)
             connection.release()

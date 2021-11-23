@@ -28,16 +28,30 @@ router.get('/test', function(req, res, next) {
   })  
 });
 
-router.get('/getArticleList', (req, res, next) => {
-  let getArticleListSql = `select * from blog_article_list`
-  db.query(getArticleListSql, (err,result) => {
+router.get('/getArticleList', async (req, res, next) => {
+  console.log(req.query)
+  var npagesize = (req.query.page - 1) * 10
+
+  const getArticleListSql =  `select * from blog_article_list limit ${npagesize},10`
+ 
+  const getArticleTotalSql = `select count(*) as total from blog_article_list`
+
+  var articleTotal;
+  await db.query(getArticleTotalSql, (err,result) => {
     if (err) {
       return next(err)
     }
-    console.error(result)
+    articleTotal = result[0].total
+  })
+
+  await db.query(getArticleListSql, (err,result) => {
+    if (err) {
+      return next(err)
+    }
     res.send({
       code: 200,
-      data:result
+      data: result,
+      total:articleTotal
     })
   })
 })
