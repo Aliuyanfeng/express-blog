@@ -70,5 +70,46 @@ router.get('/getBaseInfo', (req, res, next) => {
   })
 })
 
+router.post('/login', (req, res, next) => {
+  res.send({
+    code: 20000,
+    data:'admin-token'
+  })
+})
+
+router.get('/getInfo', (req, res, next) => {
+  res.send({
+    code: 20000,
+    data: {
+      roles: ['admin'],
+      introduction: 'I am a super administrator',
+      avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+      name: 'Super Admin'
+    }
+  })
+})
+// 创建文章
+router.post('/addArticle', (req, res, next) => {
+  console.error(req.body)
+  let data = req.body
+  let deal_article_tag = data.platforms.join(',');
+  let deal_article_comment = !data.comment_disabled ? 0 : 1;
+  // 
+  let insertArticle = `INSERT INTO blog_article_list (article_title,article_description,article_createtime,article_like,article_read,article_tag,article_cover,article_status,article_content,article_comment,article_author) 
+                       VALUES ('${data.title}','${data.content_short}','${data.display_time}',0,0,'${deal_article_tag}','${data.image_uri}','${data.status}','${data.content}','${deal_article_comment}','${data.author}')
+                       `
+  db.query(insertArticle, (err, result) => {
+    if (err) {
+      return next(err)
+    }
+
+
+    res.send({
+      code: 20000,
+      data:'admin-token'
+    })
+  })
+  
+})
 
 module.exports = router;
