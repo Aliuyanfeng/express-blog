@@ -8,12 +8,12 @@ var pool = mysql.createPool({
     database: 'vue3-blog',
     timezone:"08:00"
 });
-pool.on('acquire', function (connection) {
-    console.log('Connection %d acquired', connection.threadId);
-});
-pool.on('connection', function (connection) {
-    connection.query('SET SESSION auto_increment_increment=1')
-});
+// pool.on('acquire', function (connection) {
+//     console.log('Connection %d acquired', connection.threadId);
+// });
+// pool.on('connection', function (connection) {
+//     connection.query('SET SESSION auto_increment_increment=1')
+// });
 
 function query(sql,callback){
     pool.getConnection(function(err,connection){
