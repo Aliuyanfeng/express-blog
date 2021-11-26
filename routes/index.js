@@ -31,7 +31,7 @@ router.get('/getArticleList', async (req, res, next) => {
   console.log(req.query)
   var npagesize = (req.query.page - 1) * 10
 
-  const getArticleListSql =  `select * from blog_article_list limit ${npagesize},10`
+  const getArticleListSql =  `select * from blog_article_list limit ${npagesize},${req.query.limit}`
  
   const getArticleTotalSql = `select count(*) as total from blog_article_list`
 
@@ -71,14 +71,14 @@ router.get('/getBaseInfo', function (req, res, next) {
 
 router.post('/login', (req, res, next) => {
   res.send({
-    code: 20000,
+    code: 200,
     data:'admin-token'
   })
 })
 
 router.get('/getInfo', (req, res, next) => {
   res.send({
-    code: 20000,
+    code: 200,
     data: {
       roles: ['admin'],
       introduction: 'I am a super administrator',
@@ -104,7 +104,7 @@ router.post('/addArticle', (req, res, next) => {
 
 
     res.send({
-      code: 20000,
+      code: 200,
       data:'admin-token'
     })
   })
