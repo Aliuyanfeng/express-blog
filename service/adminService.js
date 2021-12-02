@@ -17,7 +17,24 @@ class AdminService {
         },((error) => {
             return error
         }))
+    };
+    async getArticleDetail(form) {
+        return await new Promise((resolve, reject) => {
+            let getArticleDetailSql = `select * from blog_article_list where id = ${form.id}`
+            db.query(getArticleDetailSql, (err, result) => {
+                if (err) {
+                    reject(err)
+                }
+                console.log(result)
+                resolve(result)
+            })
+        }).then((data) => {
+            return data
+        },((error) => {
+            return error
+        }))
     }
+
 }
 
 module.exports = AdminService

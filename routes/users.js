@@ -31,4 +31,13 @@ router.get('/getAllCategory', function(req, res, next){
   })
 })
 
+router.post('/getArticleDetail', async (req,res,next) => {
+  adminService.getArticleDetail(req.body).then(data => {
+    res.send({
+      code: 200,
+      data:data
+    })
+  })
+})
+
 module.exports = router;
