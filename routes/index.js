@@ -31,19 +31,26 @@ router.get('/getArticleList', async (req, res, next) => {
   console.log(req.query)
   var npagesize = (req.query.page - 1) * 10
 
-  const getArticleListSql =  `select * from blog_article_list limit ${npagesize},${req.query.limit}`
+  const getArticleListSql = `select * from blog_article_list limit ${npagesize},${req.query.limit}`
+  
+  const getPubishArticleListSql = `select * from blog_article_list where article_status = 'published' limit ${npagesize},${req.query.limit}`
  
   const getArticleTotalSql = `select count(*) as total from blog_article_list`
 
   var articleTotal;
-  await db.query(getArticleTotalSql, (err,result) => {
+  if (req.query.type == 1) {
+      var dealgetArticleListSql = getArticleListSql
+  } else {
+      var dealgetArticleListSql = getPubishArticleListSql
+  }
+  db.query(getArticleTotalSql, (err,result) => {
     if (err) {
       return next(err)
     }
     articleTotal = result[0].total
   })
 
-  await db.query(getArticleListSql, (err,result) => {
+  db.query(dealgetArticleListSql, (err,result) => {
     if (err) {
       return next(err)
     }

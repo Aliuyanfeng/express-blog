@@ -101,4 +101,24 @@ router.get('/getAllAuthor', async (req, res, next) => {
     })
   })
 })
+
+// 删除指定文章
+router.get('/deleteArticle', async (req, res, next) => {
+  console.error(req.query)
+  adminService.deleteArticle(req.query).then(data => {
+    if (data == 1) {
+      res.send({
+        code: 200,
+        info:'删除成功',
+      })
+    } else {
+      res.send({
+        code: 200,
+        info:'参数有误',
+      })
+    }
+    
+  })
+  
+})
 module.exports = router;

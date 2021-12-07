@@ -19,6 +19,7 @@ class AdminService {
             return error
         }))
     };
+    // 添加文章
     async addArticle(form) {
         return await new Promise((resolve, reject) => {
             let data = form
@@ -39,7 +40,7 @@ class AdminService {
         },((error) => {
             return error
         }))
-    }
+    };
     // 获取指定文章
     async getArticleDetail(form) {
         return await new Promise((resolve, reject) => {
@@ -90,7 +91,7 @@ class AdminService {
         }, (error => {
             return error
         }))
-    }
+    };
     // 获取所有作者
     async getAllAuthor() {
         return await new Promise((resolve, reject) => {
@@ -106,6 +107,29 @@ class AdminService {
         }, (error => {
             return error
         }))
+    };
+    // 删除文章
+    async deleteArticle(form) {
+        return await new Promise((resolve, reject) => {
+            let deleteArticleSql = `delete from blog_article_list where id = ${form.id}`
+
+            db.query(deleteArticleSql, (err, result)=> {
+                if(err) {
+                    reject(err)
+                }
+                resolve(result)
+            })
+        }).then(data => {
+           
+            if (data.changedRows == 0) {
+                return 0
+            } else {
+                return 1
+            }
+           
+        }, error => {
+            return error
+        })
     }
 }
 
