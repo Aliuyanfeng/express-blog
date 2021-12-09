@@ -50,11 +50,15 @@ class AdminService {
                     reject(err)
                 }
                 console.log(result)
-                // console.log(typeof result.article_content)
-                let str = result[0].article_content
-                result[0].article_content = Buffer.from(str,"base64").toString();
-               
-                resolve(result)
+                if (result.length > 0) {
+                    // console.log(typeof result.article_content)
+                    let str = result[0].article_content
+                    result[0].article_content = Buffer.from(str,"base64").toString();
+                    resolve(result)
+                } else {
+                    resolve(result)
+                }
+                
             })
         }).then((data) => {
             return data

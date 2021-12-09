@@ -59,9 +59,11 @@ router.post('/addArticle', (req, res, next) => {
 // 获取指定文章
 router.post('/getArticleDetail', async (req,res,next) => {
   adminService.getArticleDetail(req.body).then(data => {
+    let info = data.length > 0 ? '查询成功' : '暂无数据'
     res.send({
       code: 200,
-      data:data
+      data: data,
+      info:info
     })
   })
 })
