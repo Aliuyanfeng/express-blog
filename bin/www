@@ -7,7 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('node-blog:server');
 var http = require('http');
-
+var ws =require('../config/socket')
 /**
  * Get port from environment and store in Express.
  */
@@ -21,14 +21,20 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+
+
 /**
  * Listen on provided port, on all network interfaces.
  */
-
-server.listen(port);
+server.listen(port, () => {
+  console.log(' * service is running :' + port);
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
+ws.listen(server, () => {
+  console.log(' * socket is running :' + port);
+})
 /**
  * Normalize a port into a number, string, or false.
  */
@@ -58,9 +64,9 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ?
+    'Pipe ' + port :
+    'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -83,8 +89,8 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ?
+    'pipe ' + addr :
+    'port ' + addr.port;
   debug('Listening on ' + bind);
 }
