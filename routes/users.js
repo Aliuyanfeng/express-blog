@@ -1,9 +1,19 @@
 var express = require('express');
 var router = express.Router();
 
+const jwt = require('jsonwebtoken')
+
+
+const { PRIVITE_KEY, EXPIRESD } = require('../config/secret.js')
+
 const AdminService = require('../service/adminService')
 
+const UserService = require('../service/userService')
+
 var adminService = new AdminService()
+
+var userService = new UserService()
+
 
 /* GET users listing. */
 router.all("*", function (req, res, next) {
@@ -18,9 +28,50 @@ router.all("*", function (req, res, next) {
   else next();
 });
 
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/test', function(req, res, next) {
+  res.send({
+    code: 200,
+    info:"test is successful"
+  });
 });
+
+// 用户登陆
+router.post('/user/login', function (req, res, next) {
+  userService.logIn(req.body).then(data => {
+    if (data.length > 0) {
+      const token = 'Bearer ' + jwt.sign(
+        {
+          _id: data.id,
+          admin: data.username
+        },
+        PRIVITE_KEY,
+        {
+          expiresIn: EXPIRESD
+        }
+      )
+
+      res.send({
+        code: 200,
+        data: 'admin-token',
+        token:token
+      })
+    }
+  }) 
+})
+// 测试解密token
+router.post('/verifyTest', function (req, res, next) {
+  res.send({
+    code: 200,
+    data: 'token哈哈哈哈',
+  })
+})
+// 退出登陆
+router.post('/user/logout', function (req, res, next) {
+  res.send({
+    code: 200,
+    info:"logout is successful"
+  });
+})
 
 // 获取所有文章分类
 router.get('/getAllCategory', function(req, res, next){

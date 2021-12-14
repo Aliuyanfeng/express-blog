@@ -6,6 +6,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser')
 
+var expressJwt = require('express-jwt')
+
+const { PRIVITE_KEY, EXPIRESD } = require('./config/secret.js')
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -24,6 +28,13 @@ app.use(express.static(path.join(__dirname, './dist')));
 // 配置body-parser
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+app.use(expressJwt({
+  secret: PRIVITE_KEY,
+  algorithms: ['HS256']
+}).unless({
+  path:['/admin/user/login']
+}))
 
 app.use('/', indexRouter);
 app.use('/admin', usersRouter);
@@ -56,12 +67,21 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // 这里可以捕捉token失效的状态
+  console.log(err)
+  if (err.name === 'UnauthorizedError') {   
+    res.status(401).send({
+      code: 401,
+      info:'登录过期'
+    })
+  } else {
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+  }
+  
 });
 
 module.exports = app;
