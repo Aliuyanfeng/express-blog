@@ -70,7 +70,7 @@ app.use(function(err, req, res, next) {
   // 这里可以捕捉token失效的状态
   console.log(err)
   if (err.name === 'UnauthorizedError') {   
-    res.status(401).send({
+    res.send({
       code: 401,
       info:'登录过期'
     })
