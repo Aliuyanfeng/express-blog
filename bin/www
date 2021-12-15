@@ -34,26 +34,26 @@ var certInfo = {
   cert:privatekey
 }
 
-var server2 = https.createServer(certInfo,app);
+// var server2 = https.createServer(certInfo,app);
 
-// var server = http.createServer(app);
+var server = http.createServer(app);
 
-// /**
-//  * Listen on provided port, on all network interfaces.
-//  */
-// server.listen(port, () => {
-//   console.log(' * http is running :' + port);
-// });
-// server.on('error', onError);
-// server.on('listening', onListening);
-
-server2.listen(443, () => {
-  console.log(' * https is running :443' );
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+server.listen(port, () => {
+  console.log(' * http is running :' + port);
 });
-server2.on('error', onError);
-server2.on('listening', onListening);
+server.on('error', onError);
+server.on('listening', onListening);
 
-ws.listen(server2, () => {
+// server2.listen(443, () => {
+//   console.log(' * https is running :443' );
+// });
+// server2.on('error', onError);
+// server2.on('listening', onListening);
+
+ws.listen(server, () => {
   console.log(' * socket is running :' + port);
 })
 /**
