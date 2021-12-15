@@ -8,7 +8,8 @@ var app = require('../app');
 var debug = require('debug')('node-blog:server');
 var http = require('http');
 var https = require('https');
-var ws =require('../config/socket')
+var ws = require('../config/socket')
+var fs = require('fs')
 /**
  * Get port from environment and store in Express.
  */
@@ -20,7 +21,18 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = https.createServer(app);
+//导入生成的证书文件
+//读取key后缀的文件
+// var privatekey = fs.readFileSync("../config/cert.pem",'utf-8'); 
+// //读取crt文件
+// var cretificate = fs.readFileSync("../config/cert.key",'utf-8');
+
+// var certInfo = {
+//   key: privatekey,
+//   cert:cretificate
+// }
+
+var server = http.createServer(app);
 
 
 
