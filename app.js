@@ -33,10 +33,12 @@ app.use(expressJwt({
   secret: PRIVITE_KEY,
   algorithms: ['HS256']
 }).unless({
-  path:['/admin/user/login']
+  path: [
+    '/admin/user/login',
+    { url: /^\/index\/.*/, methods: ['GET','POST'] }]
 }))
 
-app.use('/', indexRouter);
+app.use('/index', indexRouter);
 app.use('/admin', usersRouter);
 
 // const  NodeMediaServer  = require('node-media-server');

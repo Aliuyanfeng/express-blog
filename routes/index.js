@@ -16,7 +16,7 @@ router.all("*", function (req, res, next) {
 });
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Welcome to My Blog' });
 });
 
 router.get('/test', function(req, res, next) {
@@ -73,13 +73,6 @@ router.get('/getBaseInfo', function (req, res, next) {
       code: 200,
       data:result[0]
     })
-  })
-})
-
-router.post('/login', (req, res, next) => {
-  res.send({
-    code: 200,
-    data:'admin-token'
   })
 })
 
