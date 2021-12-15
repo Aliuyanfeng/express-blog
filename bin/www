@@ -10,6 +10,7 @@ var http = require('http');
 var https = require('https');
 var ws = require('../config/socket')
 var fs = require('fs')
+var path = require('path')
 /**
  * Get port from environment and store in Express.
  */
@@ -23,27 +24,34 @@ app.set('port', port);
 
 //导入生成的证书文件
 //读取key后缀的文件
-// var privatekey = fs.readFileSync("../config/cert.pem",'utf-8'); 
-// //读取crt文件
-// var cretificate = fs.readFileSync("../config/cert.key",'utf-8');
+var privatekey = fs.readFileSync(path.join(__dirname,"../config/cert.pem"), 'utf-8'); 
 
-// var certInfo = {
-//   key: privatekey,
-//   cert:cretificate
-// }
+//读取crt文件
+var cretificate = fs.readFileSync(path.join(__dirname,"../config/cert.key"),'utf-8');
+
+var certInfo = {
+  key: cretificate,
+  cert:privatekey
+}
+
+var server2 = https.createServer(certInfo,app);
 
 var server = http.createServer(app);
-
-
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 server.listen(port, () => {
-  console.log(' * service is running :' + port);
+  console.log(' * http is running :' + port);
 });
 server.on('error', onError);
 server.on('listening', onListening);
+
+server2.listen(443, () => {
+  console.log(' * https is running :443' );
+});
+server2.on('error', onError);
+server2.on('listening', onListening);
 
 ws.listen(server, () => {
   console.log(' * socket is running :' + port);
