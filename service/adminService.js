@@ -1,5 +1,5 @@
 
-// 数据库查询业务分离出来
+// 后台管理接口行为类
 var db = require('../config/db')
 
 class AdminService {

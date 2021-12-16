@@ -29,17 +29,20 @@ app.use(express.static(path.join(__dirname, './dist')));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// 中间件使用，接口安全校验token,刨除指定的接口
 app.use(expressJwt({
   secret: PRIVITE_KEY,
   algorithms: ['HS256']
 }).unless({
   path: [
-    '/admin/user/login',
-    { url: /^\/index\/.*/, methods: ['GET','POST'] }]
+    '/',
+    '/index',
+    '/admin/user/login', //后台登陆接口不做校验
+    { url: /^\/index\/.*/, methods: ['GET','POST'] }] //以/index开头的接口不做校验，其为博客展示相关接口
 }))
 
-app.use('/index', indexRouter);
-app.use('/admin', usersRouter);
+app.use('/index', indexRouter); //博客接口
+app.use('/admin', usersRouter); //博客后台接口
 
 // const  NodeMediaServer  = require('node-media-server');
 

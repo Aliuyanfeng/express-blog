@@ -1,6 +1,7 @@
 
 var db = require('../config/db')
 
+// 账户行为类 example:登陆 登出
 class UserService {
      // 登陆
     async logIn(form) {

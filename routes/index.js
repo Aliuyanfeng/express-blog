@@ -3,6 +3,20 @@ var express = require('express');
 var router = express.Router();
 var db = require('../config/db')
 
+
+const AdminService = require('../service/adminService')
+
+const UserService = require('../service/userService')
+
+const IndexService = require('../service/indexService')
+
+var indexService = new IndexService()
+
+var adminService = new AdminService()
+
+var userService = new UserService()
+
+
 router.all("*", function (req, res, next) {
   //设置允许跨域的域名，*代表允许任意域名跨域
   res.header("Access-Control-Allow-Origin", "*");
@@ -16,9 +30,9 @@ router.all("*", function (req, res, next) {
 });
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Welcome to My Blog' });
+  res.render('index', { title: 'Hi Welcome to My Blog' });
 });
-
+// 前台测试接口
 router.get('/test', function(req, res, next) {
   res.send({
     code:200,
@@ -26,65 +40,37 @@ router.get('/test', function(req, res, next) {
 
   })  
 });
-
+// 获取文章列表
 router.get('/getArticleList', async (req, res, next) => {
-  console.log(req.query)
-  var npagesize = (req.query.page - 1) * 10
 
-  const getArticleListSql = `select * from blog_article_list limit ${npagesize},${req.query.limit}`
-  
-  const getPubishArticleListSql = `select * from blog_article_list where article_status = 'published' limit ${npagesize},${req.query.limit}`
- 
-  const getArticleTotalSql = `select count(*) as total from blog_article_list`
-
-  var articleTotal;
-  if (req.query.type == 1) {
-      var dealgetArticleListSql = getArticleListSql
-  } else {
-      var dealgetArticleListSql = getPubishArticleListSql
-  }
-  db.query(getArticleTotalSql, (err,result) => {
-    if (err) {
-      return next(err)
-    }
-    articleTotal = result[0].total
-  })
-
-  db.query(dealgetArticleListSql, (err,result) => {
-    if (err) {
-      return next(err)
-    }
+  indexService.getArticleList(req.query).then(data => {
     res.send({
-      code: 200,
-      data: result,
-      total:articleTotal
+        code: 200,
+        data: data.result,
+        total: data.articleTotal
     })
   })
 })
-
+// 获取首页基础信息
 router.get('/getBaseInfo', function (req, res, next) {
-  let baseInfoSql = `select * from blog_baseInfo where id = 1025`
-  db.query(baseInfoSql, (err, result) => {
-    if (err) {
-      return next(err)
+  indexService.getBaseInfo().then(data => {
+    if (data) {
+      res.send({
+        code: 200,
+        data:data[0]
+      })
     }
-    console.error(result)
-    res.send({
-      code: 200,
-      data:result[0]
-    })
   })
 })
 
-router.get('/getInfo', (req, res, next) => {
-  res.send({
-    code: 200,
-    data: {
-      roles: ['admin'],
-      introduction: 'I am a super administrator',
-      avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-      name: 'Super Admin'
-    }
+router.post('/getArticleDetail', async (req,res,next) => {
+  adminService.getArticleDetail(req.body).then(data => {
+    let info = data.length > 0 ? '查询成功' : '暂无数据'
+    res.send({
+      code: 200,
+      data: data,
+      info:info
+    })
   })
 })
 

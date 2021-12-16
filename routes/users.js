@@ -10,6 +10,10 @@ const AdminService = require('../service/adminService')
 
 const UserService = require('../service/userService')
 
+const IndexService = require('../service/indexService')
+
+var indexService = new IndexService()
+
 var adminService = new AdminService()
 
 var userService = new UserService()
@@ -173,5 +177,29 @@ router.get('/deleteArticle', async (req, res, next) => {
     
   })
   
+})
+// 获取后台管理员基础信息
+router.get('/getInfo', (req, res, next) => {
+  res.send({
+    code: 200,
+    data: {
+      roles: ['admin'],
+      introduction: 'I am a super administrator',
+      avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+      name: 'Super Admin'
+    }
+  })
+})
+
+// 获取文章列表
+router.get('/getArticleList', async (req, res, next) => {
+
+  indexService.getArticleList(req.query).then(data => {
+    res.send({
+        code: 200,
+        data: data.result,
+        total: data.articleTotal
+    })
+  })
 })
 module.exports = router;
