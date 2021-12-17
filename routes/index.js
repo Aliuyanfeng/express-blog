@@ -62,7 +62,7 @@ router.get('/getBaseInfo', function (req, res, next) {
     }
   })
 })
-
+// 获取文章详情
 router.post('/getArticleDetail', async (req,res,next) => {
   adminService.getArticleDetail(req.body).then(data => {
     let info = data.length > 0 ? '查询成功' : '暂无数据'
@@ -70,6 +70,16 @@ router.post('/getArticleDetail', async (req,res,next) => {
       code: 200,
       data: data,
       info:info
+    })
+  })
+})
+
+// 获取所有文章分类
+router.get('/getAllCategory', function(req, res, next){
+  adminService.getAllCategory().then((data) => {
+    res.send({
+      code: 200,
+      data:data
     })
   })
 })
