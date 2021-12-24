@@ -179,7 +179,7 @@ router.get('/deleteArticle', async (req, res, next) => {
   
 })
 // 获取后台管理员基础信息
-router.get('/user/getInfo', (req, res, next) => {
+router.post('/user/getInfo', (req, res, next) => {
   res.send({
     code: 200,
     data: {
