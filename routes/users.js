@@ -180,15 +180,35 @@ router.get('/deleteArticle', async (req, res, next) => {
 })
 // 获取后台管理员基础信息
 router.post('/user/getInfo', (req, res, next) => {
-  res.send({
-    code: 200,
-    data: {
-      roles: ['admin'],
-      introduction: 'I am a super administrator',
-      avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-      name: 'Super Admin'
+  userService.logIn(req.body).then(data => {
+    if (data.length > 0) {
+      const token = 'Bearer ' + jwt.sign(
+        {
+          _id: data.id,
+          admin: data.username
+        },
+        PRIVITE_KEY,
+        {
+          expiresIn: EXPIRESD
+        }
+      )
+
+      res.send({
+        code: 200,
+        data: 'admin-token',
+        token:token
+      })
     }
-  })
+  }) 
+  // res.send({
+  //   code: 200,
+  //   data: {
+  //     roles: ['admin'],
+  //     introduction: 'I am a super administrator',
+  //     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+  //     name: 'Super Admin'
+  //   }
+  // })
 })
 
 // 获取文章列表
