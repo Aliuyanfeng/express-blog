@@ -30,6 +30,7 @@ router.all("*", function (req, res, next) {
   // if (req.method.toLowerCase() == "options") res.sendStatus(200);
   //让options尝试请求快速结束
   // else next();
+  next();
 });
 
 router.get('/test', function(req, res, next) {
