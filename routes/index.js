@@ -43,7 +43,6 @@ router.get('/test', function(req, res, next) {
   res.send({
     code:200,
     obj:'哈哈',
-
   })  
 });
 // 获取文章列表

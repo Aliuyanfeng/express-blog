@@ -38,6 +38,7 @@ app.use(expressJwt({
     '/',
     '/index',
     '/admin/user/getInfo',
+    '/index/test',
     '/admin/user/login', //后台登陆接口不做校验
     { url: /^\/index\/.*/, methods: ['GET','POST'] }] //以/index开头的接口不做校验，其为博客展示相关接口
 }))
