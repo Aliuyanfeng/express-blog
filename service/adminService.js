@@ -134,7 +134,8 @@ class AdminService {
         }, error => {
             return error
         })
-    }
+    };
+    // 添加笔记
 }
 
 module.exports = AdminService
