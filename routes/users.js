@@ -208,9 +208,80 @@ router.get('/getArticleList', async (req, res, next) => {
   })
 })
 
-// 添加笔记
-
 
 // 创建笔记分类
+router.post('/addNoteCategory', async (req, res, next) => {
+  
+  console.log(req.body) 
+  adminService.addNoteCategory(req.body).then(data => {
+    console.log(data)
+    res.send({
+      code: 200,
+      info:"添加成功"
+    })
+  })
+  
+})
+
+// 更新笔记分类
+router.post('/editNoteCategory', async (req, res, next) => {
+  console.log(req.body)
+  adminService.editNoteCategory(req.body).then(data => {
+    console.log(data)
+    if (data) {
+      res.send({
+        code: 200,
+        inof: '更新成功',
+      })
+    } else {
+      res.send({
+        code: 200,
+        inof: '更新失败',
+      })
+    }
+   
+  })
+
+})
+
+// 删除笔记分类
+router.post('/delNoteCaegory', async (req, res, next) => {
+  adminService.delNoteCaegory(req.body).then(data => {
+    if (data == 1) {
+      res.send({
+        code: 200,
+        info:'删除成功',
+      })
+    } else {
+      res.send({
+        code: 200,
+        info:'参数有误',
+      })
+    }
+  })
+})
+// 获取笔记所有分类
+router.get('/getNoteCategory', async (req, res, next) => {
+  adminService.getNoteCategory().then(data => {
+    res.send({
+      code: 200,
+      inof: '查询成功',
+      data:data
+    })
+  })
+})
+
+
+// 发布笔记
+router.post('/publishNote', async (req, res, next) => {
+  console.log(req.body)
+  adminService.publishNote(req.body).then(data => {
+    res.send({
+      code: 200,
+      info:"发布成功"
+    })
+  })
+  
+})
 
 module.exports = router;

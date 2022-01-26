@@ -135,7 +135,159 @@ class AdminService {
             return error
         })
     };
-    // 添加笔记
+    // 添加笔记一级分类
+    async addNoteCategory(form) {
+        return await new Promise((resolve, reject) => {
+            let addNoteCategorySql =  
+            `INSERT INTO blog_note_classify (classify_name,pid,children) 
+            VALUES ('${form.name}','${form.parent_id == "" ? 0 : form.parent_id}',0)
+            `
+
+            db.query(addNoteCategorySql, (err, result)=> {
+                if(err) {
+                    reject(err)
+                }
+                resolve(result)
+            })
+        }).then(data => {
+            console.log(data)
+            return data
+           
+        }, error => {
+            return error
+        })
+    };
+    // 获取笔记分类数据
+    async getNoteCategory() {
+        return await new Promise((resolve, reject) => {
+            let getNoteCategorySql =  `select * from blog_note_classify`
+
+            db.query(getNoteCategorySql, (err, result)=> {
+                if(err) {
+                    reject(err)
+                }
+                resolve(result)
+            })
+        }).then(data => {
+            
+            let tempData = []; //处理后的数据
+
+            let firstData = [];//一级分类
+            let secondData = [];//二级/三级分类
+
+            data.map(item => {
+                if (item.pid == 0) {
+                    firstData.push(item)
+                    let tempObj = {
+                        id: item.id,
+                        name: item.classify_name,
+                        children:[]
+                    }
+                    tempData.push(tempObj)
+                } else { 
+                    secondData.push(item)
+                }
+            })
+            
+            secondData.map(item => {
+                tempData.map(item2 => {
+                    if (item.pid == item2.id) {
+                        let tempObj = {
+                            id: item.id,
+                            name: item.classify_name,
+                            children:[]
+                        }
+                        item2.children.push(tempObj)
+                    }
+                })
+            })
+
+            tempData.map(item => {
+                item.children.map(item2 => {
+                    secondData.map(item3 => {
+                        if (item2.id == item3.pid) {
+                            let tempObj = {
+                                id: item3.id,
+                                name: item3.classify_name,
+                            }
+                            item2.children.push(tempObj)
+                        }
+                    })
+                })
+            })
+
+
+            return tempData
+        }, error => {
+            return error
+        })
+    };
+    // 编辑笔记分类
+    async editNoteCategory(form) {
+        return await new Promise((resolve, reject) => {
+            let editNoteCategorySql =  
+            `UPDATE blog_note_classify set
+            classify_name = "${form.name}"
+            where id = ${form.id}
+            `
+
+            db.query(editNoteCategorySql, (err, result)=> {
+                if(err) {
+                    reject(err)
+                }
+                resolve(result)
+            })
+        }).then(data => {
+            if (data.changedRows == 0) {
+                return 0
+            } else {
+                return 1
+            }
+           
+        }, error => {
+            return error
+        })
+    };
+    // 删除笔记分类
+    async delNoteCaegory(form) {
+        return await new Promise((resolve, reject) => {
+            let delNoteCaegorySql =  `delete from blog_note_classify where id = ${form.id}`
+
+            db.query(delNoteCaegorySql, (err, result)=> {
+                if(err) {
+                    reject(err)
+                }
+                resolve(result)
+            })
+        }).then(data => {
+            if (data.changedRows == 0) {
+                return 0
+            } else {
+                return 1
+            }
+           
+        }, error => {
+            return error
+        })
+    };
+    // 发布笔记
+    async publishNote(form) {
+        return await new Promise((resolve, reject) => {
+            let publishNoteSql = `INSERT INTO blog_note_list (note_name,note_md,note_html,note_classify_id) 
+                                VALUES ('${form.name}','${form.md}','${form.html}','${form.parent_id}')
+                                `
+            db.query(publishNoteSql, (err, result) => {
+                if (err) {
+                return next(err)
+                }
+                resolve(result)
+            })
+        }).then((data) => {
+            return data
+        },((error) => {
+            return error
+        }))
+    }
 }
 
 module.exports = AdminService

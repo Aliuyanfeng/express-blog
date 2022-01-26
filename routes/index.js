@@ -88,5 +88,14 @@ router.get('/getAllCategory', function(req, res, next){
     })
   })
 })
-
+// 获取笔记所有分类
+router.get('/getNoteCategory', async (req, res, next) => {
+  adminService.getNoteCategory().then(data => {
+    res.send({
+      code: 200,
+      inof: '查询成功',
+      data:data
+    })
+  })
+})
 module.exports = router;
