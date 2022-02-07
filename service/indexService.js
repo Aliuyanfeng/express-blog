@@ -18,7 +18,7 @@ class IndexService {
             return error
         }))
     };
-
+    // 获取文章列表
     async getArticleList(form) {
         return await new Promise(async (resolve, reject) => {
 
@@ -57,6 +57,22 @@ class IndexService {
         }, error => {
             return error
         })
+    };
+    // 获取分类下的所有笔记
+    async getNote(form) {
+        return await new Promise((resolve, reject) => {
+            let getNoteSql = `select * from blog_note_list where note_classify_id = ${form.id}`
+            db.query(getNoteSql, (err, result) => {
+                if (err) {
+                    reject(err)
+                }
+                resolve(result)
+            })
+        }).then((data) => {
+            return data
+        }, ((error) => {
+            return error
+        }))
     }
 }
 

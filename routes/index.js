@@ -93,8 +93,19 @@ router.get('/getNoteCategory', async (req, res, next) => {
   adminService.getNoteCategory().then(data => {
     res.send({
       code: 200,
-      inof: '查询成功',
+      info: '查询成功',
       data:data
+    })
+  })
+})
+// 获取指定分类下的笔记
+router.post('/getNote', async (req, res, next) => {
+  console.log(req.body)
+  indexService.getNote(req.body).then(data => {
+    res.send({
+      code: 200,
+      data: data,
+      info:"查询成功"
     })
   })
 })
