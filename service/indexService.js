@@ -66,6 +66,10 @@ class IndexService {
                 if (err) {
                     reject(err)
                 }
+                result.map((item, index) => {
+                    item.note_html = Buffer.from(item.note_html, "base64").toString();
+                    item.note_md = Buffer.from(item.note_md, "base64").toString();
+                })
                 resolve(result)
             })
         }).then((data) => {

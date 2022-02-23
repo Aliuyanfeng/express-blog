@@ -273,8 +273,10 @@ class AdminService {
     // 发布笔记
     async publishNote(form) {
         return await new Promise((resolve, reject) => {
+            let deal_md = Buffer.from(form.md).toString('base64')
+            let deal_html = Buffer.from(form.html).toString('base64')
             let publishNoteSql = `INSERT INTO blog_note_list (note_name,note_md,note_html,note_classify_id) 
-                                VALUES ('${form.name}','${form.md}','${form.html}','${form.parent_id}')
+                                VALUES ('${form.name}','${deal_md}','${deal_html}','${form.parent_id}')
                                 `
             db.query(publishNoteSql, (err, result) => {
                 if (err) {
