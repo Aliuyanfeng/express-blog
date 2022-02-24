@@ -8,10 +8,12 @@
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
+    "art-template": "^4.13.2",
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-art-template": "^1.0.1",
     "express-jwt": "^6.1.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",

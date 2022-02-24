@@ -1,8 +1,10 @@
+//路由错误处理
 var createError = require('http-errors');
 var express = require('express');
 var mysql = require('mysql')
 var path = require('path');
 var cookieParser = require('cookie-parser');
+//错误输出日志
 var logger = require('morgan');
 var bodyParser = require('body-parser')
 
@@ -12,19 +14,25 @@ const { PRIVITE_KEY, EXPIRESD } = require('./config/secret.js')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var defaultRouter = require('./routes/default')
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
+app.set('view engine', 'html');
+// 重新更改视图模板引擎为html
+app.engine("html",require("express-art-template"))
+//开发环境设置
 app.use(logger('dev'));
-// 挂在bodyParser
+//解析json
 app.use(express.json());
+// 挂载bodyParser post参数设置
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// 项目入口 每次打包后放进dist
 app.use(express.static(path.join(__dirname, './dist')));
+//静态资源设置
 app.use('/static', express.static('public'));
 // 配置body-parser
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -37,6 +45,7 @@ app.use(expressJwt({
 }).unless({
   path: [
     '/',
+    // {url:/^\/.*/},
     '/index',
     '/admin/user/getInfo',
     '/index/test',
@@ -44,6 +53,7 @@ app.use(expressJwt({
     { url: /^\/index\/.*/, methods: ['GET','POST'] }] //以/index开头的接口不做校验，其为博客展示相关接口
 }))
 
+app.use('/', defaultRouter);
 app.use('/index', indexRouter); //博客接口
 app.use('/admin', usersRouter); //博客后台接口
 
@@ -67,12 +77,12 @@ app.use('/admin', usersRouter); //博客后台接口
 // nms.run();
 
 
-// catch 404 and forward to error handler
+// 捕捉 404 and 重定向到错误页面
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// error 处理
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   // 这里可以捕捉token失效的状态
@@ -82,6 +92,7 @@ app.use(function(err, req, res, next) {
       code: 401,
       info:'登录过期'
     })
+    
   } else {
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};

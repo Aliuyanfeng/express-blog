@@ -2,6 +2,7 @@ const { Router } = require('express');
 var express = require('express');
 var router = express.Router();
 var db = require('../config/db')
+var createError = require('http-errors');
 
 
 const AdminService = require('../service/adminService')
@@ -109,4 +110,12 @@ router.post('/getNote', async (req, res, next) => {
     })
   })
 })
+
+//错误处理
+router.get('*',function (req,res,next) {
+  // res.status(404).send('404 Not Found')
+  res.render("error.html")
+  // next(createError(404));
+});
+
 module.exports = router;

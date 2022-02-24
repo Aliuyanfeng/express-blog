@@ -284,4 +284,12 @@ router.post('/publishNote', async (req, res, next) => {
   
 })
 
+
+//错误处理
+router.get('*',function (req,res,next) {
+  // res.status(404).send('404 Not Found')
+  res.render("error.html")
+  // next(createError(404));
+});
+
 module.exports = router;
