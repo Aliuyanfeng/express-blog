@@ -26,8 +26,8 @@ class AdminService {
             let deal_article_tag = data.platforms.join(',');
             let deal_article_comment = !data.comment_disabled ? 0 : 1;
             let deal_article_content = Buffer.from(data.content).toString('base64')
-            let insertArticle = `INSERT INTO blog_article_list (article_title,article_description,article_createtime,article_like,article_read,article_tag,article_cover,article_status,article_content,article_comment,article_author) 
-                                VALUES ('${data.title}','${data.content_short}','${data.display_time}',0,0,'${deal_article_tag}','${data.image_uri}','${data.status}','${deal_article_content}','${deal_article_comment}','${data.author}')
+            let insertArticle = `INSERT INTO blog_article_list (article_title,article_description,article_createtime,article_like,article_read,article_tag,article_cover,article_status,article_content,article_comment,article_author,article_importance) 
+                                VALUES ('${data.title}','${data.content_short}','${data.display_time}',0,0,'${deal_article_tag}','${data.image_uri}','${data.status}','${deal_article_content}','${deal_article_comment}','${data.author}','${data.importance}')
                                 `
             db.query(insertArticle, (err, result) => {
                 if (err) {
