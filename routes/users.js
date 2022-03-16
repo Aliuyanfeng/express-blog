@@ -1,5 +1,23 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const fs = require('fs')
+const path = require('path')
+
+//文件上传
+var storage = multer.diskStorage({
+  //文件保存路径
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname,"../uploads"))
+  },
+  //修改文件名称
+  filename: function (req, file, cb) {
+    var fileFormat = (file.originalname).split(".");
+    cb(null, Date.now() + "." + fileFormat[fileFormat.length - 1]);
+  }
+})
+//加载配置
+var upload = multer({ storage: storage });
 
 const jwt = require('jsonwebtoken')
 
@@ -37,10 +55,10 @@ router.all("*", function (req, res, next) {
     next();
 });
 
-router.get('/test', function(req, res, next) {
+router.get('/test', function (req, res, next) {
   res.send({
     code: 200,
-    info:"test is successful"
+    info: "test is successful"
   });
 });
 
@@ -62,10 +80,10 @@ router.post('/user/login', function (req, res, next) {
       res.send({
         code: 200,
         data: 'admin-token',
-        token:token
+        token: token
       })
     }
-  }) 
+  })
 })
 // 测试解密token
 router.post('/verifyTest', function (req, res, next) {
@@ -78,16 +96,16 @@ router.post('/verifyTest', function (req, res, next) {
 router.post('/user/logout', function (req, res, next) {
   res.send({
     code: 200,
-    info:"logout is successful"
+    info: "logout is successful"
   });
 })
 
 // 获取所有文章分类
-router.get('/getAllCategory', function(req, res, next){
+router.get('/getAllCategory', function (req, res, next) {
   adminService.getAllCategory().then((data) => {
     res.send({
       code: 200,
-      data:data
+      data: data
     })
   })
 })
@@ -98,13 +116,13 @@ router.post('/addArticle', (req, res, next) => {
   if (!req.body.title) {
     res.send({
       code: 400,
-      info:"文章标题不能为空！"
+      info: "文章标题不能为空！"
     })
   }
   if (!req.body.display_time) {
     res.send({
       code: 400,
-      info:"文章发布时间不能为空！"
+      info: "文章发布时间不能为空！"
     })
   }
   if (!body.author) body.author = '刘艳峰'
@@ -112,18 +130,18 @@ router.post('/addArticle', (req, res, next) => {
   adminService.addArticle(body).then(data => {
     res.send({
       code: 200,
-      data:'admin-token'
+      data: 'admin-token'
     })
   })
 })
 // 获取指定文章
-router.post('/getArticleDetail', async (req,res,next) => {
+router.post('/getArticleDetail', async (req, res, next) => {
   adminService.getArticleDetail(req.body).then(data => {
     let info = data.length > 0 ? '查询成功' : '暂无数据'
     res.send({
       code: 200,
       data: data,
-      info:info
+      info: info
     })
   })
 })
@@ -136,21 +154,21 @@ router.post('/updateArticle', async (req, res, next) => {
       if (data.changedRows > 0) {
         res.send({
           code: 200,
-          info:"文章修改成功"
+          info: "文章修改成功"
         })
       } else {
         res.send({
           code: 200,
-          info:"文章暂无修改"
+          info: "文章暂无修改"
         })
       }
     } else {
       res.send({
         code: 200,
-        info:"数据有误，稍后重试"
+        info: "数据有误，稍后重试"
       })
     }
-    
+
   })
 })
 
@@ -158,8 +176,8 @@ router.post('/updateArticle', async (req, res, next) => {
 router.get('/getAllAuthor', async (req, res, next) => {
   adminService.getAllAuthor().then(data => {
     res.send({
-      code:200,
-      data:data
+      code: 200,
+      data: data
     })
   })
 })
@@ -171,17 +189,17 @@ router.get('/deleteArticle', async (req, res, next) => {
     if (data == 1) {
       res.send({
         code: 200,
-        info:'删除成功',
+        info: '删除成功',
       })
     } else {
       res.send({
         code: 200,
-        info:'参数有误',
+        info: '参数有误',
       })
     }
-    
+
   })
-  
+
 })
 // 获取后台管理员基础信息
 router.post('/user/getInfo', (req, res, next) => {
@@ -201,9 +219,9 @@ router.get('/getArticleList', async (req, res, next) => {
 
   indexService.getArticleList(req.query).then(data => {
     res.send({
-        code: 200,
-        data: data.result,
-        total: data.articleTotal
+      code: 200,
+      data: data.result,
+      total: data.articleTotal
     })
   })
 })
@@ -211,16 +229,16 @@ router.get('/getArticleList', async (req, res, next) => {
 
 // 创建笔记分类
 router.post('/addNoteCategory', async (req, res, next) => {
-  
-  console.log(req.body) 
+
+  console.log(req.body)
   adminService.addNoteCategory(req.body).then(data => {
     console.log(data)
     res.send({
       code: 200,
-      info:"添加成功"
+      info: "添加成功"
     })
   })
-  
+
 })
 
 // 更新笔记分类
@@ -239,7 +257,7 @@ router.post('/editNoteCategory', async (req, res, next) => {
         inof: '更新失败',
       })
     }
-   
+
   })
 
 })
@@ -250,12 +268,12 @@ router.post('/delNoteCaegory', async (req, res, next) => {
     if (data == 1) {
       res.send({
         code: 200,
-        info:'删除成功',
+        info: '删除成功',
       })
     } else {
       res.send({
         code: 200,
-        info:'参数有误',
+        info: '参数有误',
       })
     }
   })
@@ -266,7 +284,7 @@ router.get('/getNoteCategory', async (req, res, next) => {
     res.send({
       code: 200,
       inof: '查询成功',
-      data:data
+      data: data
     })
   })
 })
@@ -278,22 +296,22 @@ router.post('/publishNote', async (req, res, next) => {
   adminService.publishNote(req.body).then(data => {
     res.send({
       code: 200,
-      info:"发布成功"
+      info: "发布成功"
     })
   })
-  
+
 })
 
 // 上传图片
-router.post('/upload', async (req, res, next) => {
-  
-  res.send({
-    code: 200,
-    info:"上传成功"
-  })
+router.post('/upload', upload.single('logo'), async (req, res, next) => {
+  res.send('200')
 })
+router.get('/form', function(req, res, next){
+  var form = fs.readFileSync(path.join(__dirname,"./form.html"), {encoding: 'utf8'});
+  res.send(form);
+});
 //错误处理
-router.get('*',function (req,res,next) {
+router.get('*', function (req, res, next) {
   // res.status(404).send('404 Not Found')
   res.render("error.html")
   // next(createError(404));
