@@ -284,7 +284,14 @@ router.post('/publishNote', async (req, res, next) => {
   
 })
 
-
+// 上传图片
+router.post('/upload', async (req, res, next) => {
+  
+  res.send({
+    code: 200,
+    info:"上传成功"
+  })
+})
 //错误处理
 router.get('*',function (req,res,next) {
   // res.status(404).send('404 Not Found')
