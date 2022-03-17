@@ -8,7 +8,7 @@ const path = require('path')
 var storage = multer.diskStorage({
   //文件保存路径
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "/"))
+    cb(null, path.join(__dirname, "../../upload/images"))
     // cb(null,'./upload/images')
   },
   //修改文件名称
