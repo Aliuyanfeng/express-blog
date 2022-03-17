@@ -8,7 +8,8 @@ const path = require('path')
 var storage = multer.diskStorage({
   //文件保存路径
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname,"../uploads"))
+    // cb(null, path.join(__dirname, "../uploads"))
+    cb(null,'./upload/images')
   },
   //修改文件名称
   filename: function (req, file, cb) {
@@ -304,7 +305,12 @@ router.post('/publishNote', async (req, res, next) => {
 
 // 上传图片
 router.post('/upload', upload.single('logo'), async (req, res, next) => {
-  res.send('200')
+  res.send({
+    code: 200,
+    obj: {
+      filePath:req.file.path
+    }
+  })
 })
 router.get('/form', function(req, res, next){
   var form = fs.readFileSync(path.join(__dirname,"./form.html"), {encoding: 'utf8'});
