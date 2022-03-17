@@ -8,8 +8,8 @@ const path = require('path')
 var storage = multer.diskStorage({
   //文件保存路径
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../../upload/images"))
-    // cb(null,'./upload/images')
+    // cb(null, path.join(__dirname, "../../upload/images"))
+    cb(null,'./uploads')
   },
   //修改文件名称
   filename: function (req, file, cb) {
@@ -24,6 +24,8 @@ const jwt = require('jsonwebtoken')
 
 
 const { PRIVITE_KEY, EXPIRESD } = require('../config/secret.js')
+
+const { uploadUrl } = require('../config/base.js')
 
 const AdminService = require('../service/adminService')
 
@@ -308,7 +310,8 @@ router.post('/upload', upload.single('logo'), async (req, res, next) => {
   res.send({
     code: 200,
     obj: {
-      filePath:req.file.path
+      req: req.file,
+      filePath:uploadUrl + req.file.filename
     }
   })
 })
