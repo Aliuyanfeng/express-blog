@@ -3,29 +3,24 @@ const router = express.Router();
 const multer = require('multer');
 const fs = require('fs')
 const path = require('path')
-
-//文件上传
-var storage = multer.diskStorage({
-  //文件保存路径
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../../upload/images"))
-    // cb(null,'./uploads')
-  },
-  //修改文件名称
-  filename: function (req, file, cb) {
-    var fileFormat = (file.originalname).split(".");
-    cb(null, Date.now() + "." + fileFormat[fileFormat.length - 1]);
-  }
-})
-//加载配置
-var upload = multer({ storage: storage });
-
 const jwt = require('jsonwebtoken')
 
+const { imageFilter,imageLimit,baseStorage,normalStorage } = require('../config/upload.js')
+//加载配置
+var mainUploader = multer({
+  storage: baseStorage,
+  fileFilter: imageFilter,
+  limits: imageLimit
+})
 
-const { PRIVITE_KEY, EXPIRESD } = require('../config/secret.js')
+const {
+  PRIVITE_KEY,
+  EXPIRESD
+} = require('../config/secret.js')
 
-const { uploadUrl } = require('../config/base.js')
+const {
+  uploadUrl
+} = require('../config/base.js')
 
 const AdminService = require('../service/adminService')
 
@@ -39,7 +34,7 @@ var adminService = new AdminService()
 
 var userService = new UserService()
 
-
+// 路由请求配置
 const allowHeaders = "Origin, Expires, Content-Type, X-E4M-With, Authorization";
 /* GET users listing. */
 router.all("*", function (req, res, next) {
@@ -53,7 +48,7 @@ router.all("*", function (req, res, next) {
   //让options尝试请求快速结束
   // else next();
   if (req.method.toLowerCase() == 'options')
-    res.send(200);  //让options尝试请求快速结束
+    res.send(200); //让options尝试请求快速结束
   else
     next();
 });
@@ -69,15 +64,13 @@ router.get('/test', function (req, res, next) {
 router.post('/user/login', function (req, res, next) {
   userService.logIn(req.body).then(data => {
     if (data.length > 0) {
-      const token = 'Bearer ' + jwt.sign(
-        {
-          _id: data.id,
-          admin: data.username
-        },
-        PRIVITE_KEY,
-        {
-          expiresIn: EXPIRESD
-        }
+      const token = 'Bearer ' + jwt.sign({
+        _id: data.id,
+        admin: data.username
+      },
+        PRIVITE_KEY, {
+        expiresIn: EXPIRESD
+      }
       )
 
       res.send({
@@ -306,24 +299,49 @@ router.post('/publishNote', async (req, res, next) => {
 })
 
 // 上传图片
-router.post('/upload', upload.single('logo'), async (req, res, next) => {
-  res.send({
-    code: 200,
-    obj: {
-      req: req.file,
-      filePath:uploadUrl + req.file.filename
+router.post('/upload', (req, res, next) => {
+  let imgUploader = mainUploader.single('avatar')
+  imgUploader(req, res, function (err) {
+    // 如果发生错误 判断错误的种类 1内置 2自生成
+    if (!!err) {
+      // 1
+      if (err instanceof multer.MulterError) {
+        res.send({
+          code: 400,
+          info: err.message,
+          infoStatus: err.code
+        })
+      // 2
+      } else if (err) {
+        res.send({
+          code: 400,
+          err: err,
+          info: "Only jpeg or png images allowed！"
+        })
+        return
+      }
+    } else {
+      res.send({
+        code: 200,
+        obj: {
+          req: req.file,
+          filePath: uploadUrl + req.file.filename
+        }
+      })
     }
   })
+
 })
-router.get('/form', function(req, res, next){
-  var form = fs.readFileSync(path.join(__dirname,"./form.html"), {encoding: 'utf8'});
+// 测试图片上传表单
+router.get('/form', function (req, res, next) {
+  var form = fs.readFileSync(path.join(__dirname, "./form.html"), {
+    encoding: 'utf8'
+  });
   res.send(form);
 });
 //错误处理
 router.get('*', function (req, res, next) {
-  // res.status(404).send('404 Not Found')
   res.render("error.html")
-  // next(createError(404));
 });
 
 module.exports = router;

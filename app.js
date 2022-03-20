@@ -50,34 +50,15 @@ app.use(expressJwt({
     '/admin/user/getInfo',
     '/index/test',
     '/admin/user/login', //后台登陆接口不做校验
-    '/admin/upload',
-    '/admin/form',
+    // '/admin/upload',
+    // '/admin/form',
+    '/favicon.ico',
     { url: /^\/index\/.*/, methods: ['GET','POST'] }] //以/index开头的接口不做校验，其为博客展示相关接口
 }))
 
 app.use('/', defaultRouter);
 app.use('/index', indexRouter); //博客接口
 app.use('/admin', usersRouter); //博客后台接口
-
-// const  NodeMediaServer  = require('node-media-server');
-
-// const config = {
-//     rtmp: {
-//         port: 1935,
-//         chunk_size: 60000,
-//         gop_cache: true,
-//         ping: 60,
-//         ping_timeout: 30
-//     },
-//     http: {
-//         port: 8000,
-//         allow_origin: '*'
-//     }
-// };
-
-// var nms = new NodeMediaServer(config);
-// nms.run();
-
 
 // 捕捉 404 and 重定向到错误页面
 app.use(function(req, res, next) {
