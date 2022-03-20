@@ -4,6 +4,7 @@ const multer = require('multer');
 const fs = require('fs')
 const path = require('path')
 const jwt = require('jsonwebtoken')
+var multipart = require('connect-multiparty');
 
 const { imageFilter,imageLimit,baseStorage,normalStorage } = require('../config/upload.js')
 //加载配置
@@ -12,6 +13,8 @@ var mainUploader = multer({
   fileFilter: imageFilter,
   limits: imageLimit
 })
+
+var multipartMiddleware = multipart();
 
 const {
   PRIVITE_KEY,
@@ -299,9 +302,13 @@ router.post('/publishNote', async (req, res, next) => {
 })
 
 // 上传图片
-router.post('/upload', (req, res, next) => {
+router.post('/upload',(req, res, next) => {
+  // console.log(req.body)
+  // console.log(req.file)
   let imgUploader = mainUploader.single('avatar')
   imgUploader(req, res, function (err) {
+    console.log(req.body)
+    // console.log(req.files)
     // 如果发生错误 判断错误的种类 1内置 2自生成
     if (!!err) {
       // 1
