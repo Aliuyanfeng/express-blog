@@ -22,7 +22,9 @@ const {
 } = require('../config/secret.js')
 
 const {
-  uploadUrl
+  uploadUrl,
+  baseUploadUrl,
+  normalUploadUrl
 } = require('../config/base.js')
 
 const AdminService = require('../service/adminService')
@@ -305,7 +307,10 @@ router.post('/publishNote', async (req, res, next) => {
 router.post('/upload',(req, res, next) => {
   // console.log(req.body)
   // console.log(req.file)
-  let imgUploader = mainUploader.single('avatar')
+  let imgUploader = mainUploader.fields([
+    { name: 'avatar', maxCount: 1 },
+    { name: 'cover', maxCount: 1 }
+  ])
   imgUploader(req, res, function (err) {
     console.log(req.body)
     // console.log(req.files)
@@ -331,8 +336,8 @@ router.post('/upload',(req, res, next) => {
       res.send({
         code: 200,
         obj: {
-          req: req.file,
-          filePath: uploadUrl + req.file.filename
+          req: req.files,
+          filePath: uploadUrl + req.files.filename
         }
       })
     }
