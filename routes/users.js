@@ -337,7 +337,7 @@ router.post('/upload',(req, res, next) => {
         code: 200,
         obj: {
           req: req.files,
-          filePath: uploadUrl + req.files[req.body.type][0].filename
+          filePath: baseUploadUrl + req.files[req.body.type][0].filename
         }
       })
     }
