@@ -289,6 +289,28 @@ class AdminService {
         },((error) => {
             return error
         }))
+    };
+    // 更新基本信息
+    async updateBaseInfo(form) {
+        return await new Promise((resolve, reject) => {
+            let updateBaseInfoSql = `update blog_baseInfo set 
+                                    blog_title = "${form.title}",
+                                    blog_subtitle = "${form.subTitle}",
+                                    blog_descrption = "${form.desc}",
+                                    blog_aq = "${form.aq}",
+                                    blog_avatar = "${form.avatar}"
+                                    where id = 1025`
+            db.query(updateBaseInfoSql, (err, result) => {
+                if (err) {
+                    reject(err)
+                }
+                resolve(result)
+            })
+        }).then(data => {
+            return data
+        }, (error => {
+            return error
+        }))
     }
 }
 

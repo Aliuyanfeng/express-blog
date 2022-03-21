@@ -250,12 +250,12 @@ router.post('/editNoteCategory', async (req, res, next) => {
     if (data) {
       res.send({
         code: 200,
-        inof: '更新成功',
+        info: '更新成功',
       })
     } else {
       res.send({
         code: 200,
-        inof: '更新失败',
+        info: '更新失败',
       })
     }
 
@@ -284,7 +284,7 @@ router.get('/getNoteCategory', async (req, res, next) => {
   adminService.getNoteCategory().then(data => {
     res.send({
       code: 200,
-      inof: '查询成功',
+      info: '查询成功',
       data: data
     })
   })
@@ -351,6 +351,26 @@ router.get('/form', function (req, res, next) {
   });
   res.send(form);
 });
+
+// 更新首页基本信息
+router.post('/updateBaseInfo', async (req, res, next) => {
+  console.log(req.body)
+  adminService.updateBaseInfo(req.body).then(data => {
+    console.log(data)
+    if (data) {
+      res.send({
+        code: 200,
+        info: '更新成功',
+      })
+    } else {
+      res.send({
+        code: 200,
+        info: '更新失败',
+      })
+    }
+
+  })
+})
 //错误处理
 router.get('*', function (req, res, next) {
   res.render("error.html")
