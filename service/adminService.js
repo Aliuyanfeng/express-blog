@@ -298,7 +298,8 @@ class AdminService {
                                     blog_subtitle = "${form.subTitle}",
                                     blog_descrption = "${form.desc}",
                                     blog_aq = "${form.aq}",
-                                    blog_avatar = "${form.avatar}"
+                                    blog_avatar = "${form.avatar}",
+                                    blog_springFestivalDate = "${form.springFestivalDate}"
                                     where id = 1025`
             db.query(updateBaseInfoSql, (err, result) => {
                 if (err) {
