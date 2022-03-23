@@ -376,30 +376,78 @@ router.post('/updateBaseInfo', async (req, res, next) => {
 // 发布题目
 router.post('/addQuestion', async (req, res, next) => {
   console.log(req.body);
-  res.send({
-    code: 200,
-    info:'发布成功'
+  adminService.addQuestion(req.body).then(data => {
+    console.log(data)
+    if (data.insertId > 0) {
+      res.send({
+        code: 200,
+        info:'发布成功'
+      })
+    } else {
+      res.send({
+        code: 400,
+        info:'发布失败'
+      })
+    }
   })
+  
 })
 
 // 更新题目
 router.post('/updateQuestion', async (req, res, next) => {
-  
+  adminService.updateQuestion(req.body).then(data => {
+    if (data) {
+      res.send({
+        code: 200,
+        info:'更新成功'
+      })
+    } else {
+      res.send({
+        code: 400,
+        info:'更新失败'
+      })
+    }
+  })
 })
 
 // 获取指定题目
-router.post('/getQuestionDetail/id', async (req, res, next) => {
-  
+router.get('/getQuestionDetail/:id', async (req, res, next) => {
+  adminService.getQuestionDetail(req.params).then(data => {
+    if (data) {
+      res.send({
+        code: 200,
+        result:data[0]
+      })
+    }
+  })
 })
 
 // 删除题目
-router.post('/deleteQuestion', async (req, res, next) => {
-  
+router.get('/deleteQuestion', async (req, res, next) => {
+  adminService.deleteQuestion(req.query).then(data => {
+    if (data == 1) {
+      res.send({
+        code: 200,
+        info: '删除成功',
+      })
+    } else {
+      res.send({
+        code: 200,
+        info: '参数有误',
+      })
+    }
+  })
 })
 
 // 获取所有题目
 router.get('/getAllQuestion', async (req, res, next) => {
-  
+  adminService.getAllQuestion(req.query).then(data => {
+    res.send({
+      code: 200,
+      data: data.result,
+      total: data.questionTotal
+  })
+  })
 })
 
 //错误处理
