@@ -31,7 +31,8 @@ const AdminService = require('../service/adminService')
 
 const UserService = require('../service/userService')
 
-const IndexService = require('../service/indexService')
+const IndexService = require('../service/indexService');
+const { log } = require('console');
 
 var indexService = new IndexService()
 
@@ -371,6 +372,36 @@ router.post('/updateBaseInfo', async (req, res, next) => {
 
   })
 })
+
+// 发布题目
+router.post('/addQuestion', async (req, res, next) => {
+  console.log(req.body);
+  res.send({
+    code: 200,
+    info:'发布成功'
+  })
+})
+
+// 更新题目
+router.post('/updateQuestion', async (req, res, next) => {
+  
+})
+
+// 获取指定题目
+router.post('/getQuestionDetail/id', async (req, res, next) => {
+  
+})
+
+// 删除题目
+router.post('/deleteQuestion', async (req, res, next) => {
+  
+})
+
+// 获取所有题目
+router.get('/getAllQuestion', async (req, res, next) => {
+  
+})
+
 //错误处理
 router.get('*', function (req, res, next) {
   res.render("error.html")
