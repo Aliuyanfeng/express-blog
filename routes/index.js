@@ -40,10 +40,13 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Hi Welcome to My Blog' });
 });
 // 前台测试接口
-router.get('/test', function(req, res, next) {
+router.get('/test', async function(req, res, next) {
+  let {total} = await db.findTotal('blog_question_list')
+  console.log(total)
   res.send({
     code:200,
     obj:'哈哈',
+	total:total
   })  
 });
 // 获取文章列表
@@ -109,6 +112,20 @@ router.post('/getNote', async (req, res, next) => {
       info:"查询成功"
     })
   })
+})
+
+//获取题库页面基础信息
+router.post('/getQuestionBaseInfo',async (req, res, next) => {
+	let question_result = await db.findTotal('blog_question_list')
+	let classify_result = await db.findTotal('blog_article_classify')
+	
+	let classify_data = await db.find('blog_article_classify')
+	res.send({
+		code:200,
+		question_total:question_result.total,
+		classify_total:classify_result.total,
+		classify_data
+	})
 })
 
 //错误处理
