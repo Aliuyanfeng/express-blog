@@ -448,6 +448,35 @@ class AdminService {
 		}))
 	};
 	
+	//更新文章/题库分类
+	updateCategory(form){
+		return new Promise(async (resolve,reject)=>{
+			let update_result = await db.update('blog_article_classify',form)
+			if(update_result){
+				resolve(update_result)
+			}else{
+				reject('update is Error')
+			}
+		})
+	};
+	
+	//删除文章/题库分类
+	deleteCategory(form){
+		return new Promise(async (resolve,reject)=>{
+			let delete_result = await db.delete('blog_article_classify',form.id)
+			console.log(delete_result)
+			if(delete_result){
+				resolve(delete_result)
+			}else{
+				reject('delete classify is failed')
+			}
+		})
+	};
+	
+	//创建文章/题库分类
+	async createCategory(form){
+		
+	}
 }
 
 module.exports = AdminService

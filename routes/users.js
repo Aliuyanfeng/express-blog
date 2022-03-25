@@ -450,6 +450,39 @@ router.get('/getAllQuestion', async (req, res, next) => {
   })
 })
 
+// 更新文章/题目分类
+router.post('/updateCategory', async (req, res, next) => {
+	// adminService
+	adminService.updateCategory(req.body).then(data => {
+		if(data){
+			res.send({
+				code:200,
+				info:'更新成功'
+			})
+		}
+	})
+})
+// 删除文章/题目分类
+router.post('/deleteCategory', async (req, res, next) => {
+	adminService.deleteCategory(req.body).then(data => {
+		console.log(data)
+		if(data.affectedRows > 0){
+			res.send({
+				code:200,
+				info:'删除成功'
+			})
+		}else{
+			res.send({
+				code:400,
+				info:'删除失败'
+			})
+		}
+	})
+})
+// 创建文章/题目分类
+router.post('/createCategory', async (req, res, next) => {
+	
+})
 //错误处理
 router.get('*', function (req, res, next) {
   res.render("error.html")

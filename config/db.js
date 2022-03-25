@@ -53,4 +53,44 @@ exports.find = function(tableName){
 		})
 	})
 }
+
+// 通用删除
+exports.delete = function(tableName,id){
+	let deleteSql = `delete from ${tableName} where id = ${id}`
+	return new Promise((resolve,reject)=>{
+		query(deleteSql,(err,result)=>{
+			if(err){
+				reject(err)
+			}
+			resolve(result)
+		})
+	})
+}
+
+// 通用更新
+exports.update = function(tableName,form){
+	
+	let updateJoinStr = ``;
+	
+	Object.keys(form).forEach(function(key){
+		if(key != 'id'){
+			updateJoinStr += `${key}='${form[key]}',`
+		}
+	});
+	
+	if (updateJoinStr.length > 0) {
+		 updateJoinStr = updateJoinStr.substr(0, updateJoinStr.length - 1);
+	 }
+	
+	let updateSql = `update ${tableName} set ${updateJoinStr} where id = ${form.id} `
+	
+	return new Promise((resolve,reject)=>{
+		query(updateSql,(err,result)=>{
+			if(err){
+				reject(err)
+			}
+			resolve(result)
+		})
+	})
+}
 exports.query = query
