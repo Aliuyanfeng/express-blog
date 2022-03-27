@@ -314,7 +314,7 @@ router.post('/upload',(req, res, next) => {
   ])
   imgUploader(req, res, function (err) {
     console.log(req.body)
-    // console.log(req.files)
+    console.log(req.files)
     // 如果发生错误 判断错误的种类 1内置 2自生成
     if (!!err) {
       // 1
@@ -481,7 +481,20 @@ router.post('/deleteCategory', async (req, res, next) => {
 })
 // 创建文章/题目分类
 router.post('/createCategory', async (req, res, next) => {
-	
+  adminService.createCategory(req.body).then(data => {
+    console.log(data)
+    if (data.affectedRows > 0) {
+      res.send({
+        code: 200,
+        info:'添加分类成功'
+      })
+    } else {
+      res.send({
+        code: 400,
+        info:'添加分类失败'
+      })
+    }
+  })
 })
 //错误处理
 router.get('*', function (req, res, next) {

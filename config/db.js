@@ -79,13 +79,42 @@ exports.update = function(tableName,form){
 	});
 	
 	if (updateJoinStr.length > 0) {
-		 updateJoinStr = updateJoinStr.substr(0, updateJoinStr.length - 1);
+		 updateJoinStr = updateJoinStr.substring(0, updateJoinStr.length - 1);
 	 }
 	
 	let updateSql = `update ${tableName} set ${updateJoinStr} where id = ${form.id} `
 	
 	return new Promise((resolve,reject)=>{
 		query(updateSql,(err,result)=>{
+			if(err){
+				reject(err)
+			}
+			resolve(result)
+		})
+	})
+}
+
+//通用新增
+exports.insert = function (tableName, form) {
+	let insertJoinStr = ``;
+	let	insertJoinStr2 = ``;
+	
+	for (const key in form) {
+		if (key != 'id') {
+			insertJoinStr += `${key},`
+			insertJoinStr2 += `'${form[key]}',`
+		}
+	}
+
+	if (insertJoinStr.length > 0 && insertJoinStr2.length > 0) {
+		insertJoinStr = insertJoinStr.substring(0, insertJoinStr.length - 1);
+		insertJoinStr2 = insertJoinStr2.substring(0, insertJoinStr2.length - 1);
+	}
+
+	let insertsQL = `INSERT INTO ${tableName} (${insertJoinStr}) VALUES (${insertJoinStr2})`
+
+	return new Promise((resolve,reject)=>{
+		query(insertsQL,(err,result)=>{
 			if(err){
 				reject(err)
 			}

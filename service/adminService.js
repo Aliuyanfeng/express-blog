@@ -1,4 +1,5 @@
 // 后台管理接口行为类
+const { resolve } = require('path')
 var db = require('../config/db')
 
 class AdminService {
@@ -475,7 +476,15 @@ class AdminService {
 	
 	//创建文章/题库分类
 	async createCategory(form){
-		
+		return new Promise(async (resolve, reject) => {
+			let create_result = await db.insert('blog_article_classify',form)
+			console.log(create_result)
+			if(create_result){
+				resolve(create_result)
+			}else{
+				reject('create classify is failed')
+			}
+		})
 	}
 }
 
