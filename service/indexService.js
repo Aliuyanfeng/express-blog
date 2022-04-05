@@ -77,6 +77,24 @@ class IndexService {
         }, ((error) => {
             return error
         }))
+    };
+    // 点赞
+    async submitLike(form) {
+        return new Promise(async (resolve, reject) => {
+            db.query(`select * from blog_like_record where ip='${form.ip}'`, function (err, result) {
+                if (result.length > 0) {
+                    reject('create classify is failed')
+                } else {
+                    let like_result =  db.insert('blog_like_record',form)
+                    if(like_result){
+                        resolve(like_result)
+                    }else{
+                        reject('create classify is failed')
+                    }
+                }
+            })
+			
+		})
     }
 }
 

@@ -128,6 +128,31 @@ router.post('/getQuestionBaseInfo',async (req, res, next) => {
 	})
 })
 
+
+// 用户点赞
+router.post('/submitLikeBiuBiuBiu', async (req, res, next) => {
+  indexService.submitLike(req.body).then(data => {
+    if (data.affectedRows > 0) {
+      res.send({
+        code: 200,
+        info:'点赞成功'
+      })
+    } else {
+      res.send({
+        code: 400,
+        info:'点赞失败'
+      })
+    }
+  }, err => {
+    if (err) {
+      res.send({
+        code: 400,
+        info:'您已经点过赞啦'
+      })
+    }
+  })
+  
+})
 //错误处理
 router.get('*',function (req,res,next) {
   // res.status(404).send('404 Not Found')
