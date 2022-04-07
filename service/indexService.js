@@ -81,7 +81,7 @@ class IndexService {
     // 点赞
     async submitLike(form) {
         return new Promise(async (resolve, reject) => {
-            db.query(`select * from blog_like_record where ip='${form.ip}'`, function (err, result) {
+            db.query(`select * from blog_like_record where ip='${form.ip}' and article_id='${form.article_id}'`, function (err, result) {
                 if (result.length > 0) {
                     reject('create classify is failed')
                 } else {
