@@ -153,6 +153,23 @@ router.post('/submitLikeBiuBiuBiu', async (req, res, next) => {
   })
   
 })
+
+// 添加访问记录
+router.post('/isVisitorWithWebSite', async (req, res, next) => {
+  indexService.addVisitorRecord(req.body).then(data => {
+    if (data.affectedRows > 0) {
+      res.send({
+        code: 200,
+        info:'Welcome to have fun ~'
+      })
+    } else {
+      res.send({
+        code: 400,
+        info:'is Add Failed'
+      })
+    }
+  })
+})
 //错误处理
 router.get('*',function (req,res,next) {
   // res.status(404).send('404 Not Found')

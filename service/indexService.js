@@ -95,7 +95,21 @@ class IndexService {
             })
 			
 		})
-    }
+    };
+    //添加访客记录
+    async addVisitorRecord(form) {
+        return new Promise(async (resolve, reject) => {
+            
+            let visitor_result =  db.insert('blog_visitors_record',form)
+            if(visitor_result){
+                resolve(visitor_result)
+            }else{
+                reject('Add Visitor Record is Failed')
+            }
+			
+		})
+    };
+
 }
 
 

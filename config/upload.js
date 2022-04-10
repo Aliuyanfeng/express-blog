@@ -26,6 +26,7 @@ module.exports = {
         }
     }),
     imageFilter: function (req, file, cb) {
+        console.log(file)
         var acceptableMime = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
         //微信公众号只接收上述四种类型的图片
         if (acceptableMime.indexOf(file.mimetype) !== -1) {

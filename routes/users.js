@@ -310,7 +310,8 @@ router.post('/upload',(req, res, next) => {
   // console.log(req.file)
   let imgUploader = mainUploader.fields([
     { name: 'avatar', maxCount: 1 },
-    { name: 'cover', maxCount: 1 }
+    { name: 'cover', maxCount: 1 },
+    { name: 'banner' }
   ])
   imgUploader(req, res, function (err) {
     console.log(req.body)
