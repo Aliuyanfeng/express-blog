@@ -7,6 +7,8 @@ var createError = require('http-errors');
 
 const AdminService = require('../service/adminService')
 
+const baseInfo = require('../service/adminService')
+
 const UserService = require('../service/userService')
 
 const IndexService = require('../service/indexService')

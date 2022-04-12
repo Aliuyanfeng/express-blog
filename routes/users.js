@@ -32,7 +32,8 @@ const AdminService = require('../service/adminService')
 const UserService = require('../service/userService')
 
 const IndexService = require('../service/indexService');
-const { log } = require('console');
+
+const baseControl = require('../controller/baseInfo')
 
 var indexService = new IndexService()
 
@@ -497,6 +498,10 @@ router.post('/createCategory', async (req, res, next) => {
     }
   })
 })
+
+// 更新banner
+router.post('/updateBanner', baseControl.updateBanner)
+
 //错误处理
 router.get('*', function (req, res, next) {
   res.render("error.html")

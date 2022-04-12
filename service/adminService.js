@@ -1,4 +1,4 @@
-// 后台管理接口行为类
+// 后台管理接口行为类 接受参数 处理业务 执行sql 查询数据并返回结果
 const { resolve } = require('path')
 var db = require('../config/db')
 
@@ -295,27 +295,14 @@ class AdminService {
 	};
 	// 更新基本信息
 	async updateBaseInfo(form) {
-		return await new Promise((resolve, reject) => {
-			let updateBaseInfoSql =
-				`update blog_baseInfo set 
-                                    blog_title = "${form.title}",
-                                    blog_subtitle = "${form.subTitle}",
-                                    blog_descrption = "${form.desc}",
-                                    blog_aq = "${form.aq}",
-                                    blog_avatar = "${form.avatar}",
-                                    blog_springFestivalDate = "${form.springFestivalDate}"
-                                    where id = 1025`
-			db.query(updateBaseInfoSql, (err, result) => {
-				if (err) {
-					reject(err)
-				}
-				resolve(result)
-			})
-		}).then(data => {
-			return data
-		}, (error => {
-			return error
-		}))
+		return new Promise(async (resolve,reject)=>{
+			let update_result = await db.update('blog_baseInfo',form)
+			if(update_result){
+				resolve(update_result)
+			}else{
+				reject('update is Error')
+			}
+		})
 	};
 	// 发布题目
 	async addQuestion(form) {
@@ -483,6 +470,18 @@ class AdminService {
 				resolve(create_result)
 			}else{
 				reject('create classify is failed')
+			}
+		})
+	}
+
+	// 更新banner
+	async upDateBanner(form) {
+		return new Promise(async (resolve,reject)=>{
+			let update_result = await db.update('blog_baseInfo',form)
+			if(update_result){
+				resolve(update_result)
+			}else{
+				reject('update is Error')
 			}
 		})
 	}
