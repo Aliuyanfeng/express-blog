@@ -24,7 +24,7 @@ class IndexService {
 
             var npagesize = (form.page - 1) * 10
 
-            const getArticleListSql = `select * from blog_article_list limit ${npagesize},${form.limit}`
+            const getArticleListSql = `select * from blog_article_list order by case when article_importance=3 then 1 else 2 end, article_createtime desc limit ${npagesize},${form.limit}`
 
             const getPubishArticleListSql = `select * from blog_article_list where article_status = 'published' limit ${npagesize},${form.limit}`
 
@@ -83,13 +83,23 @@ class IndexService {
         return new Promise(async (resolve, reject) => {
             db.query(`select * from blog_like_record where ip='${form.ip}' and article_id='${form.article_id}'`, function (err, result) {
                 if (result.length > 0) {
-                    reject('create classify is failed')
+                    reject('submitLike is failed')
                 } else {
                     let like_result =  db.insert('blog_like_record',form)
-                    if(like_result){
-                        resolve(like_result)
+                    if (like_result) {
+                        db.query(`select * from blog_article_list where id = ${form.article_id}`, function (err, result) {
+                            console.log(result[0].article_like + 1)
+                            let update_result = db.update('blog_article_list', {
+                                id: form.article_id,
+                                article_like:result[0].article_like + 1
+                            })
+                            if (update_result) {
+                                resolve(update_result)
+                            }
+                        })
+                        
                     }else{
-                        reject('create classify is failed')
+                        reject('submitLike is failed')
                     }
                 }
             })
