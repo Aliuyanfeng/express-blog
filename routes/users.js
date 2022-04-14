@@ -315,8 +315,8 @@ router.post('/upload',(req, res, next) => {
     { name: 'banner' }
   ])
   imgUploader(req, res, function (err) {
-    console.log(req.body)
-    console.log(req.files)
+    console.log(req.body,'body')
+    // console.log(req.files,'files')
     // 如果发生错误 判断错误的种类 1内置 2自生成
     if (!!err) {
       // 1

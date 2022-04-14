@@ -26,7 +26,7 @@ module.exports = {
         }
     }),
     imageFilter: function (req, file, cb) {
-        console.log(file)
+        console.log(file,'file')
         var acceptableMime = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
         //微信公众号只接收上述四种类型的图片
         if (acceptableMime.indexOf(file.mimetype) !== -1) {
@@ -37,7 +37,7 @@ module.exports = {
         }
     },
     imageLimit: {
-        fieldSize: 5 * 1024 * 1024,
-        fileSize: 5 * 1024 * 1024
+        fieldSize: 10 * 1024 * 1024,
+        fileSize: 10 * 1024 * 1024
     }
 }
