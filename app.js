@@ -50,10 +50,13 @@ app.use(expressJwt({
     '/admin/user/getInfo',
     '/index/test',
     '/admin/user/login', //后台登陆接口不做校验
-    '/admin/upload',
-    '/admin/form',
+    // '/admin/upload',
+    // '/admin/form',
     '/favicon.ico',
-    { url: /^\/index\/.*/, methods: ['GET','POST'] }] //以/index开头的接口不做校验，其为博客展示相关接口
+    { url: /^\/index\/.*/, methods: ['GET', 'POST'] },//以/index开头的接口不做校验，其为博客展示相关接口
+    { url: /^\/admin\/.*/, methods: ['GET', 'POST'] } //POSTMAN TEST
+  ] 
+  
 }))
 
 app.use('/', defaultRouter);

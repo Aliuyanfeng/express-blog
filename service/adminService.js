@@ -485,6 +485,66 @@ class AdminService {
 			}
 		})
 	}
+
+
+	// 获取分析首页数据
+	getAnalysisIndex(form) {
+		return new Promise(async (resolve, reject) => {
+			let visitorTotalResult = await db.findBySql(`select count(*) as total from blog_visitors_record where create_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59');
+			`).catch(err => {
+				reject(err)
+			})
+
+			let likeTotalResult = await db.findBySql(`select count(*) as total from blog_like_record where create_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59');
+			`).catch(err => {
+				reject(err)
+			})
+
+			// let visitorWeekResult = await db.findBySql(`select * from blog_visitors_record where DATE_SUB(CURDATE(),INTERVAL 7 DAY) < DATE(create_time);`).catch(err => {
+			// 	reject(err)
+			// })
+
+			let days = [];
+			// var Date = new Date();
+			for(let i=0; i<=24*6;i+=24){		//今天加上前6天
+				let dateItem = new Date(new Date().getTime() - i * 60 * 60 * 1000);	//使用当天时间戳减去以前的时间毫秒（小时*分*秒*毫秒）
+				let y = dateItem.getFullYear();	//获取年份
+				let m = dateItem.getMonth() + 1;	//获取月份js月份从0开始，需要+1
+				let d= dateItem.getDate();	//获取日期
+				m = m.toString().length == 1 ? m = '0' + m.toString() : m;
+				d = d.toString().length == 1 ? d = '0' + d.toString() : d;
+				let valueItem= y + '-' + m + '-' + d;	//组合
+				days.unshift(valueItem);	//添加至数组
+			}
+			// 使用async await 处理异步操作
+			let visitorWeekResult = await Promise.all(days.map(async (item) => {
+				// 等待异步操作完成，返回执行结果
+				let findResult =  await db.findBySql(`select count(*) as total from blog_visitors_record where create_time BETWEEN CONCAT(${item},' 00:00:00') AND CONCAT(${item},' 23:59:59');
+				`).catch(err => {
+					reject(err)
+				})
+				return findResult[0].total
+			}));
+			let likeWeekResult = await Promise.all(days.map(async (item) => {
+				// 等待异步操作完成，返回执行结果
+				let findResult =  await db.findBySql(`select count(*) as total from blog_like_record where create_time BETWEEN CONCAT(${item},' 00:00:00') AND CONCAT(${item},' 23:59:59');
+				`).catch(err => {
+					reject(err)
+				})
+				return findResult[0].total
+			}));
+
+			
+			resolve({
+				visitorsTotal: visitorTotalResult[0].total,
+				likeTotal: likeTotalResult[0].total,
+				daysWithSeven:days,
+				visitorWeekResult: visitorWeekResult,
+				likeWeekResult: likeWeekResult
+			})
+			
+		})
+	}
 }
 
 module.exports = AdminService

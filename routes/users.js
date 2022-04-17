@@ -35,6 +35,8 @@ const IndexService = require('../service/indexService');
 
 const baseControl = require('../controller/baseInfo')
 
+const analysisControl = require('../controller/analysis')
+
 var indexService = new IndexService()
 
 var adminService = new AdminService()
@@ -502,6 +504,8 @@ router.post('/createCategory', async (req, res, next) => {
 // 更新banner
 router.post('/updateBanner', baseControl.updateBanner)
 
+//查询分析数据
+router.post('/getAnalysisIndex', analysisControl.getAnalysisIndex)
 //错误处理
 router.get('*', function (req, res, next) {
   res.render("error.html")

@@ -19,8 +19,8 @@ function query(sql,callback){
     pool.getConnection(function(err,connection){
         connection.query(sql, function (err, rows) {
             if (err) {
-				connection.release()
-                return console.log("SQL错误","错误信息：" + err.sqlMessage,"SQL语句：" + sql);
+				// connection.release()
+                console.log("SQL错误","错误信息：" + err.sqlMessage,"SQL语句：" + sql);
             }
             callback(err,rows)
             connection.release()
@@ -28,6 +28,18 @@ function query(sql,callback){
     })
 }//对数据库进行增删改查操作的基础
 
+
+//封装Promise查询 传入sql
+exports.findBySql = function (sql) {
+	return new Promise((resolve,reject)=>{
+		query(sql,(err,result)=>{
+			if(err){
+				reject(err)
+			}
+			resolve(result)
+		})
+	})
+}
 //通用查找总数
 exports.findTotal = function (tableName){
 	let findTotalSql = `select count(1) as total from ${tableName}`;
