@@ -1,5 +1,4 @@
 // 后台管理接口行为类 接受参数 处理业务 执行sql 查询数据并返回结果
-const { resolve } = require('path')
 var db = require('../config/db')
 
 class AdminService {

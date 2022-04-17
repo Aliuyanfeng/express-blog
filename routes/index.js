@@ -19,6 +19,7 @@ var adminService = new AdminService()
 
 var userService = new UserService()
 
+const articleControl = require('../controller/articleControl')
 
 const allowHeaders = "Origin, Expires, Content-Type, X-E4M-With, Authorization";
 /* GET users listing. */
@@ -172,6 +173,9 @@ router.post('/isVisitorWithWebSite', async (req, res, next) => {
     }
   })
 })
+
+// 文章模糊搜索
+router.post('/searchArticle',articleControl.searchArticle)
 //错误处理
 router.get('*',function (req,res,next) {
   // res.status(404).send('404 Not Found')
