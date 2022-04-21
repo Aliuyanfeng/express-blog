@@ -33,19 +33,19 @@ var certInfo = {
   key: cretificate,
   cert: privatekey
 }
-console.log(certInfo)
+// console.log(certInfo)
 var server2 = https.createServer(certInfo, app);
 
-// var server = http.createServer(app);
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-// server.listen(port, () => {
-//   console.log(' * http is running :' + port);
-// });
-// server.on('error', onError);
-// server.on('listening', onListening);
+server.listen(3000, () => {
+  console.log(' * http is running :' + 3000);
+});
+server.on('error', onError);
+server.on('listening', onListening);
 
 server2.listen(port, () => {
   console.log(' * https is running :' + port);
@@ -53,9 +53,9 @@ server2.listen(port, () => {
 server2.on('error', onError);
 server2.on('listening', onListening);
 
-// ws.listen(server, () => {
-//   console.log(' * socket is running :' + port);
-// })
+ws.listen(server, () => {
+  console.log(' * socket is running :' + port);
+})
 /**
  * Normalize a port into a number, string, or false.
  */
