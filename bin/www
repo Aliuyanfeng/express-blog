@@ -34,7 +34,7 @@ var certInfo = {
   cert:privatekey
 }
 
-// var server2 = https.createServer(certInfo,app);
+var server2 = https.createServer(certInfo,app);
 
 var server = http.createServer(app);
 
@@ -47,11 +47,11 @@ server.listen(port, () => {
 server.on('error', onError);
 server.on('listening', onListening);
 
-// server2.listen(443, () => {
-//   console.log(' * https is running :443' );
-// });
-// server2.on('error', onError);
-// server2.on('listening', onListening);
+server2.listen(443, () => {
+  console.log(' * https is running :443' );
+});
+server2.on('error', onError);
+server2.on('listening', onListening);
 
 ws.listen(server, () => {
   console.log(' * socket is running :' + port);
