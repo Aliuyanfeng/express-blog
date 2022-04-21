@@ -53,7 +53,7 @@ server2.listen(port, () => {
 server2.on('error', onError);
 server2.on('listening', onListening);
 
-ws.listen(server, () => {
+ws.listen(server2, () => {
   console.log(' * socket is running :' + port);
 })
 /**
