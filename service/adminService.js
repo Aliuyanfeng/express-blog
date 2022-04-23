@@ -515,10 +515,11 @@ class AdminService {
 				let valueItem= y + '-' + m + '-' + d;	//组合
 				days.unshift(valueItem);	//添加至数组
 			}
+			console.log(days)
 			// 使用async await 处理异步操作
 			let visitorWeekResult = await Promise.all(days.map(async (item) => {
 				// 等待异步操作完成，返回执行结果
-				let findResult =  await db.findBySql(`select count(*) as total from blog_visitors_record where create_time BETWEEN CONCAT(${item},' 00:00:00') AND CONCAT(${item},' 23:59:59');
+				let findResult =  await db.findBySql(`select count(*) as total from blog_visitors_record where create_time BETWEEN CONCAT('${item}',' 00:00:00') AND CONCAT('${item}',' 23:59:59');
 				`).catch(err => {
 					reject(err)
 				})
@@ -526,7 +527,7 @@ class AdminService {
 			}));
 			let likeWeekResult = await Promise.all(days.map(async (item) => {
 				// 等待异步操作完成，返回执行结果
-				let findResult =  await db.findBySql(`select count(*) as total from blog_like_record where create_time BETWEEN CONCAT(${item},' 00:00:00') AND CONCAT(${item},' 23:59:59');
+				let findResult =  await db.findBySql(`select count(*) as total from blog_like_record where create_time BETWEEN CONCAT('${item}',' 00:00:00') AND CONCAT('${item}',' 23:59:59');
 				`).catch(err => {
 					reject(err)
 				})

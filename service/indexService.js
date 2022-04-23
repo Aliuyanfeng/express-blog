@@ -22,7 +22,7 @@ class IndexService {
     async getArticleList(form) {
         return await new Promise(async (resolve, reject) => {
 
-            var npagesize = (form.page - 1) * 10
+            var npagesize = (form.page - 1) * (form.limit)
 
             const getArticleListSql = `select * from blog_article_list order by case when article_importance=3 then 1 else 2 end, article_createtime desc limit ${npagesize},${form.limit}`
 

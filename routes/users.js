@@ -35,7 +35,7 @@ const IndexService = require('../service/indexService');
 
 const baseControl = require('../controller/baseInfo')
 
-const analysisControl = require('../controller/analysis')
+const analysisControl = require('../controller/analysisControl')
 
 var indexService = new IndexService()
 
@@ -506,6 +506,13 @@ router.post('/updateBanner', baseControl.updateBanner)
 
 //查询分析数据
 router.post('/getAnalysisIndex', analysisControl.getAnalysisIndex)
+
+// 获取点赞记录
+router.post('/getLikeList', analysisControl.getLikeList)
+
+// 获取访客记录
+router.post('/getVisitorList', analysisControl.getVisitorList)
+
 //错误处理
 router.get('*', function (req, res, next) {
   res.render("error.html")
