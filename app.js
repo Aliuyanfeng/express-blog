@@ -30,8 +30,8 @@ app.use(express.json());
 // 挂载bodyParser post参数设置
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// 项目入口 每次打包后放进dist
-app.use(express.static(path.join(__dirname, './dist')));
+// 项目入口 每次打包后放进dist  更改为指定目录 不用手动放进来了
+app.use(express.static(path.join(__dirname, '../vue3-blogs/dist')));
 //静态资源设置
 app.use('/static', express.static('public'));
 // 配置body-parser
