@@ -26,9 +26,9 @@ app.engine("html",require("express-art-template"))
 //开发环境设置
 app.use(logger('dev'));
 //解析json
-app.use(express.json());
+app.use(express.json({limit: '10mb'}));
 // 挂载bodyParser post参数设置
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ limit: '10mb', extended: false }));
 app.use(cookieParser());
 // 项目入口 每次打包后放进dist  更改为指定目录 不用手动放进来了
 app.use(express.static(path.join(__dirname, '../vue3-blogs/dist')));
@@ -37,7 +37,7 @@ app.use('/static', express.static('public'));
 // 配置body-parser
 // app.use(bodyParser.urlencoded({ extended: false }))
 // app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }));
 app.use(bodyParser.json({limit: '10mb'}));
 
 // 中间件使用，接口安全校验token,刨除指定的接口
