@@ -35,8 +35,10 @@ app.use(express.static(path.join(__dirname, '../vue3-blogs/dist')));
 //静态资源设置
 app.use('/static', express.static('public'));
 // 配置body-parser
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+// app.use(bodyParser.urlencoded({ extended: false }))
+// app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+app.use(bodyParser.json({limit: '10mb'}));
 
 // 中间件使用，接口安全校验token,刨除指定的接口
 app.use(expressJwt({
