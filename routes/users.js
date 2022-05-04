@@ -33,7 +33,7 @@ const UserService = require('../service/userService')
 
 const IndexService = require('../service/indexService');
 
-const baseControl = require('../controller/baseInfo')
+const baseControl = require('../controller/baseInfoControl')
 
 const analysisControl = require('../controller/analysisControl')
 

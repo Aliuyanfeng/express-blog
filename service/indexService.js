@@ -58,26 +58,6 @@ class IndexService {
             return error
         })
     };
-    // 获取分类下的所有笔记
-    async getNote(form) {
-        return await new Promise((resolve, reject) => {
-            let getNoteSql = `select * from blog_note_list where note_classify_id = ${form.id}`
-            db.query(getNoteSql, (err, result) => {
-                if (err) {
-                    reject(err)
-                }
-                result.map((item, index) => {
-                    item.note_html = Buffer.from(item.note_html, "base64").toString();
-                    item.note_md = Buffer.from(item.note_md, "base64").toString();
-                })
-                resolve(result)
-            })
-        }).then((data) => {
-            return data
-        }, ((error) => {
-            return error
-        }))
-    };
     // 点赞
     async submitLike(form) {
         return new Promise(async (resolve, reject) => {

@@ -66,6 +66,23 @@ module.exports = {
                 })
             }
         })
+    },
+
+    // 添加访客记录
+    isVisitorWithWebSite(req, res) {
+        indexService.addVisitorRecord(req.body).then(data => {
+            if (data.affectedRows > 0) {
+              res.send({
+                code: 200,
+                info:'Welcome to have fun ~'
+              })
+            } else {
+              res.send({
+                code: 400,
+                info:'is Add Failed'
+              })
+            }
+          })
     }
     
 }

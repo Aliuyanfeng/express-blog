@@ -1,27 +1,18 @@
-const { Router } = require('express');
 var express = require('express');
+
 var router = express.Router();
+
 var db = require('../config/db')
-var createError = require('http-errors');
-
-
-const AdminService = require('../service/adminService')
-
-const baseInfo = require('../service/adminService')
-
-const UserService = require('../service/userService')
-
-const IndexService = require('../service/indexService')
-
-var indexService = new IndexService()
-
-var adminService = new AdminService()
-
-var userService = new UserService()
 
 const articleControl = require('../controller/articleControl')
 
 const analysisControl = require('../controller/analysisControl')
+
+const questionBankControl = require('../controller/questionBankControl')
+
+const noteControl = require('../controller/noteControl');
+
+const baseInfoControl = require('../controller/baseInfoControl');
 
 const allowHeaders = "Origin, Expires, Content-Type, X-E4M-With, Authorization";
 /* GET users listing. */
@@ -36,152 +27,59 @@ router.all("*", function (req, res, next) {
   //让options尝试请求快速结束
   // else next();
   if (req.method.toLowerCase() == 'options')
-    res.send(200);  //让options尝试请求快速结束
+    res.send(200); //让options尝试请求快速结束
   else
     next();
 });
 
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Hi Welcome to My Blog' });
+router.get('/', function (req, res, next) {
+  res.render('index', {
+    title: 'Hi Welcome to My Blog'
+  });
 });
 // 前台测试接口
-router.get('/test', async function(req, res, next) {
-  let {total} = await db.findTotal('blog_question_list')
-  console.log(total)
+router.get('/test', async function (req, res, next) {
+  let {
+    total
+  } = await db.findTotal('blog_question_list')
   res.send({
-    code:200,
-    obj:'哈哈',
-	total:total
-  })  
+    code: 200,
+    obj: '哈哈',
+    total: total
+  })
 });
 // 获取文章列表
-router.get('/getArticleList', async (req, res, next) => {
+router.get('/getArticleList', articleControl.getArticleList)
 
-  indexService.getArticleList(req.query).then(data => {
-    res.send({
-        code: 200,
-        data: data.result,
-        total: data.articleTotal
-    })
-  })
-})
 // 获取首页基础信息
-router.get('/getBaseInfo', function (req, res, next) {
-  indexService.getBaseInfo().then(data => {
-    if (data) {
-      res.send({
-        code: 200,
-        data:data[0]
-      })
-    }
-  })
-})
-// 获取文章详情
-router.post('/getArticleDetail', async (req,res,next) => {
-  adminService.getArticleDetail(req.body).then(data => {
-    let info = data.length > 0 ? '查询成功' : '暂无数据'
-    res.send({
-      code: 200,
-      data: data,
-      info:info
-    })
-  })
-})
+router.get('/getBaseInfo', baseInfoControl.getBaseInfo)
 
-// 获取所有文章分类
-router.get('/getAllCategory', function(req, res, next){
-  adminService.getAllCategory().then((data) => {
-    res.send({
-      code: 200,
-      data:data
-    })
-  })
-})
+// 获取文章详情
+router.post('/getArticleDetail', articleControl.getArticleDetail)
+
+// 获取所有文章/题库分类
+router.get('/getAllCategory', articleControl.getAllCategory)
+
 // 获取笔记所有分类
-router.get('/getNoteCategory', async (req, res, next) => {
-  adminService.getNoteCategory().then(data => {
-    res.send({
-      code: 200,
-      info: '查询成功',
-      data:data
-    })
-  })
-})
+router.get('/getNoteCategory', noteControl.getNoteCategory)
+
 // 获取指定分类下的笔记
-router.post('/getNote', async (req, res, next) => {
-  console.log(req.body)
-  indexService.getNote(req.body).then(data => {
-    res.send({
-      code: 200,
-      data: data,
-      info:"查询成功"
-    })
-  })
-})
+router.post('/getNote', noteControl.getNote)
 
 //获取题库页面基础信息
-router.post('/getQuestionBaseInfo',async (req, res, next) => {
-	let question_result = await db.findTotal('blog_question_list')
-	let classify_result = await db.findTotal('blog_article_classify')
-	
-	let classify_data = await db.find('blog_article_classify')
-	res.send({
-		code:200,
-		question_total:question_result.total,
-		classify_total:classify_result.total,
-		classify_data
-	})
-})
-
+router.get('/getQuestionBaseInfo', questionBankControl.getQuestionBaseInfo)
 
 // 用户点赞
-router.post('/submitLikeBiuBiuBiu', async (req, res, next) => {
-  indexService.submitLike(req.body).then(data => {
-    if (data.affectedRows > 0) {
-      res.send({
-        code: 200,
-        info:'点赞成功'
-      })
-    } else {
-      res.send({
-        code: 400,
-        info:'点赞失败'
-      })
-    }
-  }, err => {
-    if (err) {
-      res.send({
-        code: 400,
-        info:'您已经点过赞啦'
-      })
-    }
-  })
-  
-})
+router.post('/submitLikeBiuBiuBiu', articleControl.submitLikeBiuBiuBiu)
 
 // 添加访问记录
-router.post('/isVisitorWithWebSite', async (req, res, next) => {
-  indexService.addVisitorRecord(req.body).then(data => {
-    if (data.affectedRows > 0) {
-      res.send({
-        code: 200,
-        info:'Welcome to have fun ~'
-      })
-    } else {
-      res.send({
-        code: 400,
-        info:'is Add Failed'
-      })
-    }
-  })
-})
+router.post('/isVisitorWithWebSite', analysisControl.isVisitorWithWebSite)
 
 // 文章模糊搜索
 router.post('/searchArticle', articleControl.searchArticle)
 
-
 //错误处理
-router.get('*',function (req,res,next) {
+router.get('*', function (req, res, next) {
   // res.status(404).send('404 Not Found')
   res.render("error.html")
   // next(createError(404));

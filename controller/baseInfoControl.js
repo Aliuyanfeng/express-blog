@@ -27,5 +27,17 @@ module.exports = {
                 })
             }
         })
+    },
+
+    //获取首页基础信息
+    getBaseInfo(req, res) {
+        indexService.getBaseInfo().then(data => {
+            if (data) {
+              res.send({
+                code: 200,
+                data:data[0]
+              })
+            }
+        })
     }
 }
