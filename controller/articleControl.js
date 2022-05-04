@@ -88,6 +88,54 @@ module.exports = {
           total: data.articleTotal
       })
     })
-  }
+  },
 
+
+  // 创建文章/题目分类
+	createCategory(req, res) {
+		articleService.createCategory(req.body).then(data => {
+      console.log(data)
+      if (data.affectedRows > 0) {
+        res.send({
+          code: 200,
+          info:'添加分类成功'
+        })
+      } else {
+        res.send({
+          code: 400,
+          info:'添加分类失败'
+        })
+      }
+    })
+  },
+  
+  // 删除文章/题目分类
+  deleteCategory(req, res) {
+    articleService.deleteCategory(req.body).then(data => {
+      console.log(data)
+      if(data.affectedRows > 0){
+        res.send({
+          code:200,
+          info:'删除成功'
+        })
+      }else{
+        res.send({
+          code:400,
+          info:'删除失败'
+        })
+      }
+    })
+  },
+  
+  // 更新文章/题目分类
+  updateCategory(req, res) {
+    adminService.updateCategory(req.body).then(data => {
+      if(data){
+        res.send({
+          code:200,
+          info:'更新成功'
+        })
+      }
+    })
+  }
 }

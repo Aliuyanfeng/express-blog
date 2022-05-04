@@ -50,5 +50,31 @@ module.exports = {
 
 			})
 		})
+	},
+
+	// 创建文章/题目分类
+	async createCategory(form) {
+		return new Promise(async (resolve, reject) => {
+			let create_result = await db.insert('blog_article_classify',form)
+			console.log(create_result)
+			if(create_result){
+				resolve(create_result)
+			}else{
+				reject('create classify is failed')
+			}
+		})
+	},
+
+	//删除文章/题库分类
+	deleteCategory(form){
+		return new Promise(async (resolve,reject)=>{
+			let delete_result = await db.delete('blog_article_classify',form.id)
+			console.log(delete_result)
+			if(delete_result){
+				resolve(delete_result)
+			}else{
+				reject('delete classify is failed')
+			}
+		})
 	}
 }

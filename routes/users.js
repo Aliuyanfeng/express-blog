@@ -6,7 +6,12 @@ const path = require('path')
 const jwt = require('jsonwebtoken')
 var multipart = require('connect-multiparty');
 
-const { imageFilter,imageLimit,baseStorage,normalStorage } = require('../config/upload.js')
+const {
+  imageFilter,
+  imageLimit,
+  baseStorage,
+  normalStorage
+} = require('../config/upload.js')
 //加载配置
 var mainUploader = multer({
   storage: baseStorage,
@@ -35,7 +40,9 @@ const IndexService = require('../service/indexService');
 
 const baseControl = require('../controller/baseInfoControl')
 
-const analysisControl = require('../controller/analysisControl')
+const analysisControl = require('../controller/analysisControl');
+const articleControl = require('../controller/articleControl.js');
+const questionBankControl = require('../controller/questionBankControl.js');
 
 var indexService = new IndexService()
 
@@ -74,12 +81,12 @@ router.post('/user/login', function (req, res, next) {
   userService.logIn(req.body).then(data => {
     if (data.length > 0) {
       const token = 'Bearer ' + jwt.sign({
-        _id: data.id,
-        admin: data.username
-      },
+          _id: data.id,
+          admin: data.username
+        },
         PRIVITE_KEY, {
-        expiresIn: EXPIRESD
-      }
+          expiresIn: EXPIRESD
+        }
       )
 
       res.send({
@@ -308,16 +315,23 @@ router.post('/publishNote', async (req, res, next) => {
 })
 
 // 上传图片
-router.post('/upload',(req, res, next) => {
+router.post('/upload', (req, res, next) => {
   // console.log(req.body)
   // console.log(req.file)
-  let imgUploader = mainUploader.fields([
-    { name: 'avatar', maxCount: 1 },
-    { name: 'cover', maxCount: 1 },
-    { name: 'banner' }
+  let imgUploader = mainUploader.fields([{
+      name: 'avatar',
+      maxCount: 1
+    },
+    {
+      name: 'cover',
+      maxCount: 1
+    },
+    {
+      name: 'banner'
+    }
   ])
   imgUploader(req, res, function (err) {
-    console.log(req.body,'body')
+    console.log(req.body, 'body')
     // console.log(req.files,'files')
     // 如果发生错误 判断错误的种类 1内置 2自生成
     if (!!err) {
@@ -328,7 +342,7 @@ router.post('/upload',(req, res, next) => {
           info: err.message,
           infoStatus: err.code
         })
-      // 2
+        // 2
       } else if (err) {
         res.send({
           code: 400,
@@ -385,16 +399,16 @@ router.post('/addQuestion', async (req, res, next) => {
     if (data.insertId > 0) {
       res.send({
         code: 200,
-        info:'发布成功'
+        info: '发布成功'
       })
     } else {
       res.send({
         code: 400,
-        info:'发布失败'
+        info: '发布失败'
       })
     }
   })
-  
+
 })
 
 // 更新题目
@@ -403,12 +417,12 @@ router.post('/updateQuestion', async (req, res, next) => {
     if (data) {
       res.send({
         code: 200,
-        info:'更新成功'
+        info: '更新成功'
       })
     } else {
       res.send({
         code: 400,
-        info:'更新失败'
+        info: '更新失败'
       })
     }
   })
@@ -420,7 +434,7 @@ router.get('/getQuestionDetail/:id', async (req, res, next) => {
     if (data) {
       res.send({
         code: 200,
-        result:data[0]
+        result: data[0]
       })
     }
   })
@@ -444,62 +458,16 @@ router.get('/deleteQuestion', async (req, res, next) => {
 })
 
 // 获取所有题目
-router.get('/getAllQuestion', async (req, res, next) => {
-  adminService.getAllQuestion(req.query).then(data => {
-    res.send({
-      code: 200,
-      data: data.result,
-      total: data.questionTotal
-  })
-  })
-})
+router.get('/getAllQuestion', questionBankControl.getAllQuestion)
 
 // 更新文章/题目分类
-router.post('/updateCategory', async (req, res, next) => {
-	// adminService
-	adminService.updateCategory(req.body).then(data => {
-		if(data){
-			res.send({
-				code:200,
-				info:'更新成功'
-			})
-		}
-	})
-})
+router.post('/updateCategory', articleControl.updateCategory)
+
 // 删除文章/题目分类
-router.post('/deleteCategory', async (req, res, next) => {
-	adminService.deleteCategory(req.body).then(data => {
-		console.log(data)
-		if(data.affectedRows > 0){
-			res.send({
-				code:200,
-				info:'删除成功'
-			})
-		}else{
-			res.send({
-				code:400,
-				info:'删除失败'
-			})
-		}
-	})
-})
+router.post('/deleteCategory', articleControl.deleteCategory)
+
 // 创建文章/题目分类
-router.post('/createCategory', async (req, res, next) => {
-  adminService.createCategory(req.body).then(data => {
-    console.log(data)
-    if (data.affectedRows > 0) {
-      res.send({
-        code: 200,
-        info:'添加分类成功'
-      })
-    } else {
-      res.send({
-        code: 400,
-        info:'添加分类失败'
-      })
-    }
-  })
-})
+router.post('/createCategory', articleControl.createCategory)
 
 // 更新banner
 router.post('/updateBanner', baseControl.updateBanner)

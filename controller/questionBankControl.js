@@ -22,15 +22,26 @@ const questionBankService = require('../service/questionBankService')
 module.exports = {
     //获取题库页面基础信息
     async getQuestionBaseInfo(req, res) {
-       await questionBankService.getQuestionBaseInfo().then(data => {
+        await questionBankService.getQuestionBaseInfo().then(data => {
             res.send({
-                code:200,
-                question_total:data.question_result.total,
-                classify_total:data.classify_result.total,
-                classify_data:data.classify_data
+                code: 200,
+                question_total: data.question_result.total,
+                classify_total: data.classify_result.total,
+                classify_data: data.classify_data
             })
         })
-       
+
     },
+
+    //获取所有题目
+    getAllQuestion(req, res) {
+        questionBankService.getAllQuestion(req.query).then(data => {
+            res.send({
+                code: 200,
+                data: data.result,
+                total: data.questionTotal
+            })
+        })
+    }
 
 }
