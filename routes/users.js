@@ -40,9 +40,14 @@ const IndexService = require('../service/indexService');
 
 const baseControl = require('../controller/baseInfoControl')
 
+// const test = require('../service/testistest')
+
 const analysisControl = require('../controller/analysisControl');
 const articleControl = require('../controller/articleControl.js');
 const questionBankControl = require('../controller/questionBankControl.js');
+const questionBankService = require('../service/questionBankService.js');
+const baseInfoControl = require('../controller/baseInfoControl');
+const noteControl = require('../controller/noteControl.js');
 
 var indexService = new IndexService()
 
@@ -291,28 +296,10 @@ router.post('/delNoteCaegory', async (req, res, next) => {
   })
 })
 // 获取笔记所有分类
-router.get('/getNoteCategory', async (req, res, next) => {
-  adminService.getNoteCategory().then(data => {
-    res.send({
-      code: 200,
-      info: '查询成功',
-      data: data
-    })
-  })
-})
-
+router.get('/getNoteCategory', noteControl.getNoteCategory)
 
 // 发布笔记
-router.post('/publishNote', async (req, res, next) => {
-  console.log(req.body)
-  adminService.publishNote(req.body).then(data => {
-    res.send({
-      code: 200,
-      info: "发布成功"
-    })
-  })
-
-})
+router.post('/publishNote', noteControl.publishNote)
 
 // 上传图片
 router.post('/upload', (req, res, next) => {
@@ -372,90 +359,19 @@ router.get('/form', function (req, res, next) {
 });
 
 // 更新首页基本信息
-router.post('/updateBaseInfo', async (req, res, next) => {
-  console.log(req.body)
-  adminService.updateBaseInfo(req.body).then(data => {
-    console.log(data)
-    if (data) {
-      res.send({
-        code: 200,
-        info: '更新成功',
-      })
-    } else {
-      res.send({
-        code: 200,
-        info: '更新失败',
-      })
-    }
-
-  })
-})
+router.post('/updateBaseInfo', baseInfoControl.updateBaseInfo)
 
 // 发布题目
-router.post('/addQuestion', async (req, res, next) => {
-  console.log(req.body);
-  adminService.addQuestion(req.body).then(data => {
-    console.log(data)
-    if (data.insertId > 0) {
-      res.send({
-        code: 200,
-        info: '发布成功'
-      })
-    } else {
-      res.send({
-        code: 400,
-        info: '发布失败'
-      })
-    }
-  })
-
-})
+router.post('/addQuestion', questionBankControl.addQuestion)
 
 // 更新题目
-router.post('/updateQuestion', async (req, res, next) => {
-  adminService.updateQuestion(req.body).then(data => {
-    if (data) {
-      res.send({
-        code: 200,
-        info: '更新成功'
-      })
-    } else {
-      res.send({
-        code: 400,
-        info: '更新失败'
-      })
-    }
-  })
-})
+router.post('/updateQuestion', questionBankControl.updateQuestion)
 
 // 获取指定题目
-router.get('/getQuestionDetail/:id', async (req, res, next) => {
-  adminService.getQuestionDetail(req.params).then(data => {
-    if (data) {
-      res.send({
-        code: 200,
-        result: data[0]
-      })
-    }
-  })
-})
+router.get('/getQuestionDetail/:id', questionBankControl.getQuestionDetail)
 
 // 删除题目
-router.get('/deleteQuestion', async (req, res, next) => {
-  adminService.deleteQuestion(req.query).then(data => {
-    if (data == 1) {
-      res.send({
-        code: 200,
-        info: '删除成功',
-      })
-    } else {
-      res.send({
-        code: 200,
-        info: '参数有误',
-      })
-    }
-  })
-})
+router.get('/deleteQuestion', questionBankControl.deleteQuestion)
 
 // 获取所有题目
 router.get('/getAllQuestion', questionBankControl.getAllQuestion)
@@ -472,7 +388,7 @@ router.post('/createCategory', articleControl.createCategory)
 // 更新banner
 router.post('/updateBanner', baseControl.updateBanner)
 
-//查询分析数据
+// 查询分析数据
 router.post('/getAnalysisIndex', analysisControl.getAnalysisIndex)
 
 // 获取点赞记录

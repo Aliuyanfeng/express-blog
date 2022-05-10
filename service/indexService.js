@@ -52,10 +52,6 @@ class IndexService {
                 resolve({result,articleTotal})
                
             })
-        }).then(data => {
-            return data
-        }, error => {
-            return error
         })
     };
     // 点赞

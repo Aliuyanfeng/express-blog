@@ -42,6 +42,71 @@ module.exports = {
                 total: data.questionTotal
             })
         })
-    }
+    },
 
+
+    // 删除题目
+    deleteQuestion(req, res) {
+        questionBankService.deleteQuestion(req.query).then(data => {
+            if (data == 1) {
+                res.send({
+                    code: 200,
+                    info: '删除成功',
+                })
+            } else {
+                res.send({
+                    code: 200,
+                    info: '参数有误',
+                })
+            }
+        })
+    },
+
+    // 获取指定题目
+    getQuestionDetail(req, res) {
+        questionBankService.getQuestionDetail(req.params).then(data => {
+            if (data) {
+                res.send({
+                    code: 200,
+                    result: data[0]
+                })
+            }
+        })
+    },
+
+
+    //更新题目
+    updateQuestion(req, res) {
+        questionBankService.updateQuestion(req.body).then(data => {
+            if (data) {
+              res.send({
+                code: 200,
+                info: '更新成功'
+              })
+            } else {
+              res.send({
+                code: 400,
+                info: '更新失败'
+              })
+            }
+          })
+    },
+
+    // 发布题目
+    addQuestion(req, res) {
+        questionBankService.addQuestion(req.body).then(data => {
+            console.log(data)
+            if (data.insertId > 0) {
+              res.send({
+                code: 200,
+                info: '发布成功'
+              })
+            } else {
+              res.send({
+                code: 400,
+                info: '发布失败'
+              })
+            }
+          })
+    },
 }

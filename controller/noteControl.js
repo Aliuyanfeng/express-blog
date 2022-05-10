@@ -40,6 +40,27 @@ module.exports = {
                 data: data
             })
         })
+    },
+
+    // 发布笔记
+    publishNote(req, res) {
+        noteService.publishNote(req.body).then(data => {
+            res.send({
+                code: 200,
+                info: "发布成功"
+            })
+        })
+    },
+
+    // 获取笔记所有分类
+    getNoteCategory(req, res) {
+        noteService.getNoteCategory().then(data => {
+            res.send({
+                code: 200,
+                info: '查询成功',
+                data: data
+            })
+        })
     }
 
 }

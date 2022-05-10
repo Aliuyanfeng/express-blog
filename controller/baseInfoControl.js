@@ -15,15 +15,15 @@ module.exports = {
     // 更新banner
     updateBanner(req, res) {
         adminService.upDateBanner(req.body).then(data => {
-            if(data.affectedRows > 0){
+            if (data.affectedRows > 0) {
                 res.send({
                     code: 200,
-                    info:'更新Banner成功'
+                    info: '更新Banner成功'
                 })
             } else {
                 res.send({
                     code: 400,
-                    info:'更新Banner失败'
+                    info: '更新Banner失败'
                 })
             }
         })
@@ -33,11 +33,30 @@ module.exports = {
     getBaseInfo(req, res) {
         indexService.getBaseInfo().then(data => {
             if (data) {
-              res.send({
-                code: 200,
-                data:data[0]
-              })
+                res.send({
+                    code: 200,
+                    data: data[0]
+                })
             }
+        })
+    },
+
+    // 更新首页基本信息
+    updateBaseInfo(req, res) {
+        adminService.updateBaseInfo(req.body).then(data => {
+            console.log(data)
+            if (data) {
+                res.send({
+                    code: 200,
+                    info: '更新成功',
+                })
+            } else {
+                res.send({
+                    code: 200,
+                    info: '更新失败',
+                })
+            }
+
         })
     }
 }
